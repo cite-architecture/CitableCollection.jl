@@ -10,6 +10,7 @@
 struct CitableObjectCollection <: Citable
     urn::Cite2Urn
     label
+    orderingproperty
 end
 
 
