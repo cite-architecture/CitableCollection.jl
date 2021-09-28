@@ -1,24 +1,20 @@
 
-
-# CSV.File(map(IOBuffer,data)) |> DataFrame
-# CSV.File(map(IOBuffer, [str]), delim="|") |> DataFrame
-
-
-
 """A collection of citable objects.
 """
-struct CitableObjectCollection <: Citable
+struct CatalogedCollection <: Citable
     urn::Cite2Urn
     label
-    orderingproperty
+    labelling_property::Cite2Urn
+    ordering_property # Cite2Urn or nothing
+    license
+    propertylist
 end
-
 
 """URN identifying collection.
 $(SIGNATURES)
 Required function for `Citable` abstraction.
 """
-function urn(coll::CitableObjectCollection)
+function urn(coll::CatalogedCollection)
     coll.urn
 end
 
@@ -26,30 +22,28 @@ end
 $(SIGNATURES)
 Required function for `Citable` abstraction.
 """
-function label(coll::CitableObjectCollection)
+function label(coll::CatalogedCollection)
     coll.label
 end
 
 
-function cex(coll::CitableObjectCollection)
+function cex(coll::CatalogedCollection)
     """TBD"""
 end
 
-
-"""Override Base.print for `CitableObjectCollection`.
+"""Override Base.print for `CatalogedCollection`.
 $(SIGNATURES)
 Required function for `Citable` abstraction.
 """
-function print(io::IO, coll::CitableObjectCollection)
+function print(io::IO, coll::CatalogedCollection)
     print(io, "<", coll.urn, "> ", coll.label)
 end
 
-
-"""Override Base.show for `CitableObjectCollection`.
+"""Override Base.show for `CatalogedCollection`.
 $(SIGNATURES)
 Required function for `Citable` abstraction.
 """
-function show(io::IO, coll::CitableObjectCollection)
+function show(io::IO, coll::CatalogedCollection)
     print(io, "<", coll.urn, "> ", coll.label)
 end
 

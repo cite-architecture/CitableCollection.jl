@@ -17,7 +17,9 @@ using CitableCollection
 makedocs(
     sitename = "CitableCollection.jl",
     pages = [
-        "Overview" => "index.md"
+        "Overview" => "index.md",
+
+        "API docs" => "api/index.md"
     ]
     )
 
