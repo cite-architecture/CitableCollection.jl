@@ -15,6 +15,6 @@ import CitableBase: label
 
 include("collection.jl")
 
-export CitableObjects 
+export CitableObjectCollection 
 
 end # module
