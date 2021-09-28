@@ -16,5 +16,5 @@ urn:cite2:hmt:msA.v1.rights:|License for binary image data|String|CC-attribution
 // Images of the Venetus A manuscript:
 
 URN|Caption|Rights
-urn:cite2:hmt:vaimg.v1:IMG1|Folio 1 recto of the Venetus A, photographed in natural light|CC-attribution-share-alike
+urn:cite2:hmt:vaimg.v1:IMG1r|Folio 1 recto of the Venetus A, photographed in natural light|CC-attribution-share-alike
 urn:cite2:hmt:vaimg.v1:IMG1v|Folio 1 verso of the Venetus A, photographed in natural light|CC-attribution-share-alike
