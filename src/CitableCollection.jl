@@ -1,5 +1,20 @@
 module CitableCollection
+using CitableObject
+using CiteEXchange
+using CitableBase
 
-greet() = print("Hello World!")
+
+import Base:  print
+import Base:  show
+import Base:  ==
+
+import CitableBase: cex
+import CitableBase: urn
+import CitableBase: label
+
+
+include("collection.jl")
+
+export CitableObjects 
 
 end # module
