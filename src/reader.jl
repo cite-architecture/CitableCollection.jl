@@ -140,6 +140,14 @@ function collectiondf(cexsrc, delim = "|")
 
     propconf = propertyconfigs(propdata, delim)
     propnames = propertynames(propconf)
-    @warn("Look at propnames ", propnames)
+    #@info("Select these property names for DF ", propnames)
     datadf = collectiondf(collectiondata(allblocks), propnames, delim)
+
+    # Replace string URN column with parsed Cite2Urns:
+    dataurns = []
+    for r in eachrow(datadf)
+        push!(dataurns, Cite2Urn(r.urn))
+    end
+    dropped = select!(datadf, Not(:urn))
+    insertcols!(dropped,1, :urn => dataurns)
 end
