@@ -37,11 +37,13 @@ function catalog(cexsrc, delim = "|")
         push!(catalogurns, Cite2Urn(parts[1]))
     end
     catalogurns
+
     propertiesurns = []
     for prop in flatproperties
         parts = split(prop, delim)
-        push!(propertiesurns, Cite2Urn(parts[1]) |> dropobject)
+        push!(propertiesurns, Cite2Urn(parts[1]) |> dropobject |> dropproperty)
     end
-    propertiesurns |> unique
 
+    purns = propertiesurns |> unique
+    
 end
