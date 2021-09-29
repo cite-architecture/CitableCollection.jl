@@ -3,13 +3,11 @@
 # CSV.File(map(IOBuffer,data)) |> DataFrame
 # CSV.File(map(IOBuffer, [str]), delim="|") |> DataFrame
 
-"""True if collections block and properties block
-document the same set of collections.
+"""True if list of URNs from collections block and properties block document the same set of collections.
 $(SIGNATURES)
 """
 function blocksagree(collurns, propurns)
-    # TBA
-    false
+    sort(map(u -> u.urn, collurns)) == sort(map(u -> u.urn, propurns))
 end
 
 """From a list of CEX blocks, extract all data lines from one or more `citecollections` blocks.
@@ -29,8 +27,7 @@ function collectiondata(blocklist)
     datalines
 end
 
-"""Extract URNs of collections documented in
-cex src.
+"""Extract URNs of collections documented in `datalines`.
 $(SIGNATURES)
 """
 function collectionurns(datalines, delim = "|")
@@ -41,9 +38,6 @@ function collectionurns(datalines, delim = "|")
     end
     catalogurns
 end
-
-
-
 
 """From a list of CEX blocks, extract all data lines from one or more `citeproperties` blocks.
 $(SIGNATURES)
@@ -62,6 +56,20 @@ function propertydata(blocklist)
     propertylines
 end
 
+
+"""Extract collection-level URNs of properties documented in `datalines`.
+$(SIGNATURES)
+"""
+function propertyurns(datalines, delim = "|")
+    propertiesurns = []
+    for prop in datalines
+        parts = split(prop, delim)
+        push!(propertiesurns, Cite2Urn(parts[1]) |> dropobject |> dropproperty)
+    end
+    propurns = propertiesurns |> unique
+    propurns
+end
+
 """Parse CEX source data into a catalog of `CitableCollection`s.
 $(SIGNATURES)
 
@@ -71,21 +79,14 @@ function catalog(cexsrc, delim = "|")
     allblocks = blocks(cexsrc)
     catdata = collectiondata(allblocks)
     propdata = propertydata(allblocks)
-    
-    caturns = collectionurns(catdata)
+    caturns = collectionurns(catdata, delim)
+    propurns = propertyurns(prodata, delim)
 
     
 
     
 
-    propertiesurns = []
-    for prop in flatproperties
-        parts = split(prop, delim)
-        push!(propertiesurns, Cite2Urn(parts[1]) |> dropobject |> dropproperty)
-    end
-
-
-    purns = propertiesurns |> unique
+   
     blocksagree(catalogurns, purns)
     
 end

@@ -22,4 +22,11 @@ urn:cite2:hmt:vaimg.v1.rights:|License for binary image data|String|CC-attributi
     @test length(caturns) == 1
     expectedUrn = Cite2Urn("urn:cite2:hmt:vaimg.v1:")
     @test caturns[1] == expectedUrn
+
+    proplines = CitableCollection.propertydata(blocks(catdata))
+    @test length(proplines) == 3
+    propurns = CitableCollection.propertyurns(proplines)
+    @test propurns[1] == expectedUrn
+    
+    @test CitableCollection.blocksagree(caturns, propurns)
 end
