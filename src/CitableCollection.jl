@@ -18,7 +18,7 @@ include("collection.jl")
 include("collection_properties.jl")
 include("reader.jl")
 
-export CatalogedCollection 
+export CatalogedCollection, PropertyConfiguration
 export catalog
 
 end # module

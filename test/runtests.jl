@@ -1,5 +1,5 @@
 using CitableCollection
-using CiteEXchange
+using CiteEXchange, CitableObject
 using DataFrames
 using Test
 

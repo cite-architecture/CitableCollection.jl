@@ -18,4 +18,8 @@ urn:cite2:hmt:vaimg.v1.rights:|License for binary image data|String|CC-attributi
 
     datalines = CitableCollection.collectiondata(blocks(catdata))
     @test length(datalines) == 1
+    caturns = CitableCollection.collectionurns(datalines)
+    @test length(caturns) == 1
+    expectedUrn = Cite2Urn("urn:cite2:hmt:vaimg.v1:")
+    @test caturns[1] == expectedUrn
 end
