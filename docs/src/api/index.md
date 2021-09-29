@@ -17,7 +17,7 @@ catalog
 
 ```@docs
 CitableCollection.blocksagree
-CitableCollection.collectiondata
+CitableCollection.catalogdata
 CitableCollection.collectionurns
 CitableCollection.propertydata
 CitableCollection.propertyurns

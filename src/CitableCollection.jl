@@ -1,8 +1,6 @@
 module CitableCollection
-using CitableObject
-using CiteEXchange
-using CitableBase
-using DataFrames
+using CitableBase, CitableObject, CiteEXchange
+using CSV, DataFrames
 
 using Documenter, DocStringExtensions
 

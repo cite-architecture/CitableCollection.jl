@@ -24,7 +24,7 @@
     urn:cite2:hmt:vaimg.v1:IMG1v|Folio 1 verso of the Venetus A, photographed in natural light|CC-attribution-share-alike
 """
 
-    datalines = CitableCollection.collectiondata(blocks(catdata))
+    datalines = CitableCollection.catalogdata(blocks(catdata))
     @test length(datalines) == 1
     caturns = CitableCollection.collectionurns(datalines)
     @test length(caturns) == 1

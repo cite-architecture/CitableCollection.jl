@@ -9,7 +9,7 @@ end
 $(SIGNATURES)
 It is a DomainError if `blocklist` includes no `citecollections` blocks.
 """
-function collectiondata(blocklist)
+function catalogdata(blocklist)
     collblocks = blocksfortype("citecollections", blocklist)
     if isempty(collblocks)
         throw(DomainError(cexsrc, "No citecollections block found in CEX source"))
@@ -93,6 +93,31 @@ function propertynames(df)
     map(u -> propertyid(u), df[:, :property_urn])
 end
 
+
+
+
+"""From a list of CEX blocks, extract all data lines from one or more `citedata` blocks.
+$(SIGNATURES)
+It is a DomainError if `blocklist` includes no `citedata` blocks.
+"""
+function collectiondata(blocklist)
+    collblocks = blocksfortype("citedata", blocklist)
+    if isempty(collblocks)
+        throw(DomainError(cexsrc, "No citecollections block found in CEX source"))
+    end
+    collectionsdata = []
+    for cblock in collblocks
+        push!(collectionsdata, cblock.lines)
+    end
+    datalines = collectionsdata |> Iterators.flatten |> collect
+    datalines
+end
+
+function collectiondf(datalines, delim= "|")
+    CSV.File(IOBuffer(join(datalines,"\n")), delim=delim) |> DataFrame
+end
+
+
 """Parse CEX source data into a catalog of `CitableCollection`s.
 $(SIGNATURES)
 
@@ -100,7 +125,7 @@ $(SIGNATURES)
 """
 function catalog(cexsrc, delim = "|")
     allblocks = blocks(cexsrc)
-    catdata = collectiondata(allblocks)
+    catdata = catalogdata(allblocks)
     propdata = propertydata(allblocks)
 
     caturns = collectionurns(catdata, delim)
@@ -113,7 +138,8 @@ function catalog(cexsrc, delim = "|")
 
     propconf = propertyconfigs(propdata, delim)
     propertynames(propconf)
-    datablocks = blocksfortype("citedata", allblocks)
+    #datablocks = blocksfortype("citedata", allblocks)
+    datadf = collectiondf(collectiondata(allblocks), delim)
    
    #CSV.File(IOBuffer(join(datablocks[1].lines,"\n"))) |> DataFrame
 end
