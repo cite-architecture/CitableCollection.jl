@@ -80,13 +80,14 @@ function catalog(cexsrc, delim = "|")
     catdata = collectiondata(allblocks)
     propdata = propertydata(allblocks)
     caturns = collectionurns(catdata, delim)
-    propurns = propertyurns(prodata, delim)
+    propurns = propertyurns(propdata, delim)
 
     
+    if ! blocksagree(caturns, propurns)
+        diffs = setdiff(Set(sort(map(p -> p.urn, propurns))), Set(sort(map(p -> p.urn, caturns))))
+        throw(DomainError(diffs,"Collection URNs in citecollections and citeproperties blocks do not agree" ))
+    end
 
-    
 
-   
-    blocksagree(catalogurns, purns)
     
 end
