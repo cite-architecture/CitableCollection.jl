@@ -36,7 +36,8 @@ $(SIGNATURES)
 Required function for `Citable` abstraction.
 """
 function print(io::IO, coll::CatalogedCollection)
-    print(io, "<", coll.urn, "> ", coll.label)
+    s = string("<", coll.urn, "> ", coll.label)
+    print(io, s)
 end
 
 """Override Base.show for `CatalogedCollection`.
@@ -44,7 +45,8 @@ $(SIGNATURES)
 Required function for `Citable` abstraction.
 """
 function show(io::IO, coll::CatalogedCollection)
-    print(io, "<", coll.urn, "> ", coll.label)
+    s = string("<", coll.urn, "> ", coll.label)
+    show(io, s)
 end
 
 
