@@ -2,6 +2,7 @@ module CitableCollection
 using CitableObject
 using CiteEXchange
 using CitableBase
+using DataFrames
 
 using Documenter, DocStringExtensions
 
