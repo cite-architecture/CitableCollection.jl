@@ -18,6 +18,6 @@ include("collection_properties.jl")
 include("reader.jl")
 
 export CatalogedCollection, PropertyConfiguration
-export catalog
+export collectiondf
 
 end # module

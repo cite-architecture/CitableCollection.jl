@@ -113,8 +113,11 @@ function collectiondata(blocklist)
     datalines
 end
 
-function collectiondf(datalines, delim= "|")
-    CSV.File(IOBuffer(join(datalines,"\n")), delim=delim) |> DataFrame
+
+"""Create a DataFrame including specified columns from delimited-text data.
+"""
+function collectiondf(datalines, colnames, delim= "|")
+    CSV.File(IOBuffer(join(datalines,"\n")), select=colnames, delim=delim) |> DataFrame
 end
 
 
@@ -123,7 +126,7 @@ $(SIGNATURES)
 
 `cexsrc` must have at least one `citecollections` block and one `citeproperties` block.
 """
-function catalog(cexsrc, delim = "|")
+function collectiondf(cexsrc, delim = "|")
     allblocks = blocks(cexsrc)
     catdata = catalogdata(allblocks)
     propdata = propertydata(allblocks)
@@ -135,11 +138,8 @@ function catalog(cexsrc, delim = "|")
         throw(DomainError(diffs,"Collection URNs in citecollections and citeproperties blocks do not agree" ))
     end
 
-
     propconf = propertyconfigs(propdata, delim)
-    propertynames(propconf)
-    #datablocks = blocksfortype("citedata", allblocks)
-    datadf = collectiondf(collectiondata(allblocks), delim)
-   
-   #CSV.File(IOBuffer(join(datablocks[1].lines,"\n"))) |> DataFrame
+    propnames = propertynames(propconf)
+    @warn("Look at propnames ", propnames)
+    datadf = collectiondf(collectiondata(allblocks), propnames, delim)
 end

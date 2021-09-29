@@ -1,8 +1,8 @@
 
 
 
-@testset "Test reading collection catalog from delimited text" begin
-    catdata = """#!citecollections
+@testset "Test reading collection catalog and data from delimited text" begin
+    cexdata = """#!citecollections
 
     URN|Description|Labelling property|Ordering property|License
     urn:cite2:hmt:vaimg.v1:|Images of the Venetus A manuscriptscript|urn:cite2:hmt:vaimg.v1.caption:||CC-attribution-share-alike
@@ -24,14 +24,14 @@
     urn:cite2:hmt:vaimg.v1:IMG1v|Folio 1 verso of the Venetus A, photographed in natural light|CC-attribution-share-alike
 """
 
-    datalines = CitableCollection.catalogdata(blocks(catdata))
+    datalines = CitableCollection.catalogdata(blocks(cexdata))
     @test length(datalines) == 1
     caturns = CitableCollection.collectionurns(datalines)
     @test length(caturns) == 1
     expectedUrn = Cite2Urn("urn:cite2:hmt:vaimg.v1:")
     @test caturns[1] == expectedUrn
 
-    proplines = CitableCollection.propertydata(blocks(catdata))
+    proplines = CitableCollection.propertydata(blocks(cexdata))
     @test length(proplines) == 3
     propurns = CitableCollection.propertyurns(proplines)
     @test propurns[1] == expectedUrn
@@ -40,4 +40,6 @@
 
     propsdf = CitableCollection.propertyconfigs(proplines)
     @test nrow(propsdf) == 3
+
+    datadf = collectiondf()
 end
