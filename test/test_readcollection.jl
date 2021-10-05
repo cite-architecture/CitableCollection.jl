@@ -47,7 +47,7 @@ end
 
 
 
-@testset "Test reading collectoin data from delimited textg" begin
+@testset "Test reading collection data from delimited textg" begin
     cexdata = """#!citecollections
 
     URN|Description|Labelling property|Ordering property|License

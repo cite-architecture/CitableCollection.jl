@@ -69,8 +69,6 @@ end
 """Create a DataFrame including specified columns from delimited-text data.
 """
 function collectiondf(datalines, colnames, delim)
-    @info(datalines)
-    @info(colnames)
     CSV.File(IOBuffer(join(datalines,"\n")), select=colnames, delim=delim) |> DataFrame
 end
 

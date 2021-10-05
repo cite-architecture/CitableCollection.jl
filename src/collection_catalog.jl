@@ -51,8 +51,6 @@ function catalogdf(cexsrc, delim = "|")
         license = metadatarow[5]
         push!(catalogobjects, CatalogedCollection(u, label, labelurn, orderingurn, license, proplist))
     end
-    #propnames = propertynames(propconf)
-    #@info("Select these property names for DF ", propnames)
     catalogobjects |> DataFrame
 end
 
