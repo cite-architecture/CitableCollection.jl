@@ -5,33 +5,18 @@ function blocksagree(collurns, propurns)
     sort(map(u -> u.urn, collurns)) == sort(map(u -> u.urn, propurns))
 end
 
-"""From a list of CEX blocks, extract all data lines from one or more `citecollections` blocks.
-$(SIGNATURES)
-It is a DomainError if `blocklist` includes no `citecollections` blocks.
-"""
-function catalogdata(blocklist)
-    collblocks = blocksfortype("citecollections", blocklist)
-    if isempty(collblocks)
-        throw(DomainError(cexsrc, "No citecollections block found in CEX source"))
-    end
-    collectionsdata = []
-    for cblock in collblocks
-        push!(collectionsdata, cblock.lines[2:end])
-    end
-    datalines = collectionsdata |> Iterators.flatten |> collect
-    datalines
-end
 
 """Extract URNs of collections documented in `datalines`.
 $(SIGNATURES)
+`datalines` is a Vector of delimited-string values.
 """
 function collectionurns(datalines, delim = "|")
     catalogurns = []
     for coll in datalines
         parts = split(coll, delim)
-        push!(catalogurns, Cite2Urn(parts[1]))
+        push!(catalogurns, Cite2Urn(parts[1]) |> dropobject)
     end
-    catalogurns
+    catalogurns |> unique
 end
 
 """From a list of CEX blocks, extract all data lines from one or more `citeproperties` blocks.
@@ -51,7 +36,6 @@ function propertydata(blocklist)
     propertylines
 end
 
-
 """Extract collection-level URNs of properties documented in `datalines`.
 $(SIGNATURES)
 """
@@ -64,37 +48,6 @@ function propertyurns(datalines, delim = "|")
     propurns = propertiesurns |> unique
     propurns
 end
-
-
-"""Create a DataFrame of `PropertyConfiguration`s 
-from delimited-text source.
-$(SIGNATURES)
-"""
-function propertyconfigs(datalines, delim = "|")
-    propertylist = []
-    for prop in datalines
-        parts = split(prop, delim)
-        urn = Cite2Urn(parts[1])
-        label = parts[2]
-        ptype = parts[3]
-        authlist = isempty(parts[4]) ? [] : split(parts[4], ",")
-        config = PropertyConfiguration(
-            urn, label, ptype, authlist
-            )
-        push!(propertylist, config)
-    end
-    propertylist |> DataFrame
-end
-
-"""Extract list of property names from a DataFrame of `PropertyConfiguration` objects.
-$(SIGNATURES)
-"""
-function propertynames(df)
-    map(u -> propertyid(u), df[:, :property_urn])
-end
-
-
-
 
 """From a list of CEX blocks, extract all data lines from one or more `citedata` blocks.
 $(SIGNATURES)
@@ -113,41 +66,53 @@ function collectiondata(blocklist)
     datalines
 end
 
-
 """Create a DataFrame including specified columns from delimited-text data.
 """
-function collectiondf(datalines, colnames, delim= "|")
+function collectiondf(datalines, colnames, delim)
+    @info(datalines)
+    @info(colnames)
     CSV.File(IOBuffer(join(datalines,"\n")), select=colnames, delim=delim) |> DataFrame
 end
 
 
-"""Parse CEX source data into a catalog of `CitableCollection`s.
+"""Parse CEX source data into a Vector of DataFrames.
 $(SIGNATURES)
 
-`cexsrc` must have at least one `citecollections` block and one `citeproperties` block.
+`cexsrc` must have at least one `citecollections` block and one `citeproperties` block
+cataloging the collection, and at least one `citedata` block with data records.
 """
-function collectiondf(cexsrc, delim = "|")
+function collectiondfs(cexsrc, delim = "|"; limitto = nothing)
+    catdf = catalogdf(cexsrc, delim)
     allblocks = blocks(cexsrc)
-    catdata = catalogdata(allblocks)
-    propdata = propertydata(allblocks)
+    datablocks = blocksfortype("citedata", allblocks)
 
-    caturns = collectionurns(catdata, delim)
-    propurns = propertyurns(propdata, delim)
-    if ! blocksagree(caturns, propurns)
-        diffs = setdiff(Set(sort(map(p -> p.urn, propurns))), Set(sort(map(p -> p.urn, caturns))))
-        throw(DomainError(diffs,"Collection URNs in citecollections and citeproperties blocks do not agree" ))
+    collectiondflist = []
+    # Construct each db listed.
+    for db in datablocks
+        urnlist = collectionurns(db.lines[2:end])
+        for u in urnlist
+            dbconf = filter(r -> r.urn == u, catdf)
+            if nrow(dbconf) != 1
+                throw(ArgumentError("Bad input. Found $(nrow(dbconf)) catalog entries for collection $(u)"))
+            end
+            propnames = dbconf[1, :propertiesdf] |> configured_propertynames
+
+            #info("DF From datablock's lines ", db.lines, " and proplist ", propnames)
+            datadf = collectiondf(db.lines, propnames, delim)
+
+            #datadf = collectiondfs(collectiondata(allblocks), propnames, delim)
+            # Replace string URN column with parsed Cite2Urns:
+            dataurns = []
+            for r in eachrow(datadf)
+                push!(dataurns, Cite2Urn(r.urn))
+            end
+            dropped = select!(datadf, Not(:urn))
+            insertcols!(dropped,1, :urn => dataurns)
+            push!(collectiondflist, datadf)
+        end
     end
-
-    propconf = propertyconfigs(propdata, delim)
-    propnames = propertynames(propconf)
-    #@info("Select these property names for DF ", propnames)
-    datadf = collectiondf(collectiondata(allblocks), propnames, delim)
-
-    # Replace string URN column with parsed Cite2Urns:
-    dataurns = []
-    for r in eachrow(datadf)
-        push!(dataurns, Cite2Urn(r.urn))
-    end
-    dropped = select!(datadf, Not(:urn))
-    insertcols!(dropped,1, :urn => dataurns)
+    collectiondflist
+  
 end
+
+

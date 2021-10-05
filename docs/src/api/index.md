@@ -10,7 +10,8 @@ PropertyConfiguration
 ## Exported functions
 
 ```@docs
-catalog
+catalogdf
+collectiondfs
 ```
 
 ## Internal functions
@@ -23,5 +24,4 @@ CitableCollection.propertydata
 CitableCollection.propertyurns
 CitableCollection.propertyconfigs
 CitableCollection.propertynames
-
 ```

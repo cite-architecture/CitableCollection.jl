@@ -13,11 +13,11 @@ import CitableBase: urn
 import CitableBase: label
 
 
-include("collection.jl")
+include("collection_catalog.jl")
 include("collection_properties.jl")
 include("reader.jl")
 
 export CatalogedCollection, PropertyConfiguration
-export collectiondf
+export collectiondfs, catalogdf
 
 end # module
