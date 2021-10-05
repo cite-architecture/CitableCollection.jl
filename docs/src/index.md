@@ -7,11 +7,13 @@
 
 Citable objects belong to a cataloged collection.  We normally work with a single catalog with records for one or more collections, plus a set of data for each cataloged collection.  We can use Julia's `DataFrame` type for the catalog information, and a Vector of `DataFrame`s for one or more data sets.
 
+While can work with either a catalog or a data set in distinct `DataFrame`s, the `CitableCollection` module also includes a `CollectionLibrary` structure that has members for a catalog DataFrame, and a Vector of DataFrame for data sets.
+
 This page briefly shows:
 
 1. how to read a catalog into a DataFrame
 2. how to read datasets into a Vector of DataFrames
-3. how to read both at once from a single CEX source
+3. how to read both at once into a `CitableLibrary` from a single CEX source
 
 ### A cataloged collection
 
@@ -66,6 +68,37 @@ length(datadfs)
 1
 ```
 
-### Load both at once
+### Load a `CitableLibrary`
 
 The `collectionlibrary` function reads from a CEX source that includes `citecatalog`, `citeproperties`, and `citedata` blocks.
+
+
+
+```jldoctest citecoll
+fullcex = """#!citecollections
+
+URN|Description|Labelling property|Ordering property|License
+urn:cite2:hmt:vaimg.v1:|Images of the Venetus A manuscriptscript|urn:cite2:hmt:vaimg.v1.caption:||CC-attribution-share-alike
+
+
+#!citeproperties
+
+Property|Label|Type|Authority list
+urn:cite2:hmt:vaimg.v1.urn:|Image URN|Cite2Urn|
+urn:cite2:hmt:vaimg.v1.caption:|Caption|String|
+urn:cite2:hmt:vaimg.v1.rights:|License for binary image data|String|CC-attribution-share-alike,public domain
+
+#!citedata
+// Images of the Venetus A manuscript:
+
+urn|caption|rights
+urn:cite2:hmt:vaimg.v1:IMG1r|Folio 1 recto of the Venetus A, photographed in natural light|CC-attribution-share-alike
+urn:cite2:hmt:vaimg.v1:IMG1v|Folio 1 verso of the Venetus A, photographed in natural light|CC-attribution-share-alike
+"""
+collectionlib = collectionlibrary(fullcex)
+isa(collectionlib, CollectionLibrary)
+
+# output
+
+true
+```

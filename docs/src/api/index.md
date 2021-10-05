@@ -23,5 +23,5 @@ CitableCollection.collectionurns
 CitableCollection.propertydata
 CitableCollection.propertyurns
 CitableCollection.propertyconfigs
-CitableCollection.propertynames
+CitableCollection.configured_propertynames
 ```
