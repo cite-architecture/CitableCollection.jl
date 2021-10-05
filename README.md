@@ -1,6 +1,6 @@
 # CitableCollection.jl
 
-A module for working with collections of citable objects.
+A Julia module for working with collections of citable objects.
 
 Current status: 
 
