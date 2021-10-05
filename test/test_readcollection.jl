@@ -47,7 +47,7 @@ end
 
 
 
-@testset "Test reading collection data from delimited textg" begin
+@testset "Test reading collection data from delimited text" begin
     cexdata = """#!citecollections
 
     URN|Description|Labelling property|Ordering property|License
@@ -69,6 +69,6 @@ end
     urn:cite2:hmt:vaimg.v1:IMG1r|Folio 1 recto of the Venetus A, photographed in natural light|CC-attribution-share-alike
     urn:cite2:hmt:vaimg.v1:IMG1v|Folio 1 verso of the Venetus A, photographed in natural light|CC-attribution-share-alike
 """
-    datadfs = collectiondfs(cexdata)
-    @test nrow(datadfs[1]) == 2
+    datalib = collectionlibrary(cexdata)
+    @test isa(datalib, CollectionLibrary)
 end

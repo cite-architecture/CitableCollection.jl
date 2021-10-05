@@ -73,14 +73,13 @@ function collectiondf(datalines, colnames, delim)
 end
 
 
-"""Parse CEX source data into a Vector of DataFrames.
+"""Use `catalog` to parse CEX source data into a Vector of DataFrames.
 $(SIGNATURES)
 
-`cexsrc` must have at least one `citecollections` block and one `citeproperties` block
-cataloging the collection, and at least one `citedata` block with data records.
+`cexsrc` must have at least one `citedata` block with data records matching
+information in `catalog`.
 """
-function collectiondfs(cexsrc, delim = "|"; limitto = nothing)
-    catdf = catalogdf(cexsrc, delim)
+function collectiondfs(cexsrc, catalogdf::DataFrame, delim = "|"; limitto = nothing)
     allblocks = blocks(cexsrc)
     datablocks = blocksfortype("citedata", allblocks)
 
@@ -89,16 +88,12 @@ function collectiondfs(cexsrc, delim = "|"; limitto = nothing)
     for db in datablocks
         urnlist = collectionurns(db.lines[2:end])
         for u in urnlist
-            dbconf = filter(r -> r.urn == u, catdf)
+            dbconf = filter(r -> r.urn == u, catalogdf)
             if nrow(dbconf) != 1
                 throw(ArgumentError("Bad input. Found $(nrow(dbconf)) catalog entries for collection $(u)"))
             end
             propnames = dbconf[1, :propertiesdf] |> configured_propertynames
-
-            #info("DF From datablock's lines ", db.lines, " and proplist ", propnames)
             datadf = collectiondf(db.lines, propnames, delim)
-
-            #datadf = collectiondfs(collectiondata(allblocks), propnames, delim)
             # Replace string URN column with parsed Cite2Urns:
             dataurns = []
             for r in eachrow(datadf)
@@ -110,7 +105,5 @@ function collectiondfs(cexsrc, delim = "|"; limitto = nothing)
         end
     end
     collectiondflist
-  
 end
-
 
