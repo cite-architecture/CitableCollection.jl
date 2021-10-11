@@ -10,6 +10,8 @@ struct CatalogedCollection <: Citable
     propertiesdf
 end
 
+CitableTrait(::Type{CatalogedCollection}) = CitableByCite2Urn()
+
 
 """Parse CEX source data into a catalog of `CitableCollection`s.
 $(SIGNATURES)
