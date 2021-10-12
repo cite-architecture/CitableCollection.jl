@@ -1,3 +1,6 @@
+![build](https://github.com/cite-architecture/CitableCollection.jl/actions/workflows/Documentation.yml/badge.svg)
+
+
 # CitableCollection.jl
 
 A Julia module for working with collections of citable objects.
