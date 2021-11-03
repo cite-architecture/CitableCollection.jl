@@ -18,21 +18,21 @@ $(SIGNATURES)
 
 `cexsrc` must have at least one `citecollections` block and one `citeproperties` block.
 """
-function catalogdf(cexsrc, delim = "|")
+function catalogdf(cexsrc; delimiter = "|")
     allblocks = blocks(cexsrc)
     catdata = catalogdata(allblocks)
     propdata = propertydata(allblocks)
-    caturns = collectionurns(catdata, delim)
-    propurns = propertyurns(propdata, delim)
+    caturns = collectionurns(catdata, delimiter)
+    propurns = propertyurns(propdata, delimiter)
     if ! blocksagree(caturns, propurns)
         diffs = setdiff(Set(sort(map(p -> p.urn, propurns))), Set(sort(map(p -> p.urn, caturns))))
         throw(DomainError(diffs,"Collection URNs in citecollections and citeproperties blocks do not agree" ))
     end
-    propconf = propertyconfigs(propdata, delim)
+    propconf = propertyconfigs(propdata, delimiter)
 
     catalogcolumns = []
     for row in catdata
-        cols = split(row, delim)
+        cols = split(row, delimiter)
         # Check on size of entries.
         if length(cols) != 5
             throw(ArgumentError("Invalid CEX source. $(length(cols)) columns found for configuration of collection: $(row)."))
@@ -94,7 +94,7 @@ function label(coll::CatalogedCollection)
 end
 
 
-function cex(coll::CatalogedCollection)
+function cex(coll::CatalogedCollection; delimiter = "|")
     """TBD"""
 end
 

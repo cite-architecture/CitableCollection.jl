@@ -5,7 +5,6 @@ struct CollectionLibrary
 end
 
 
-
 """Parse CEX source data into a CollectionLibrary.
 $(SIGNATURES)
 
@@ -13,7 +12,7 @@ $(SIGNATURES)
 cataloging the collection, and at least one `citedata` block with data records.
 """
 function collectionlibrary(cexsrc, delim = "|"; limitto = nothing)
-    catdf = catalogdf(cexsrc, delim)
+    catdf = catalogdf(cexsrc; delimiter = delim)
     colldfs = collectiondfs(cexsrc, catdf, delim; limitto=limitto)
     CollectionLibrary(catdf, colldfs)
 end
