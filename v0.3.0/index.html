@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Overview · CitableCollection.jl</title><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>CitableCollection.jl</a></span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Overview</a><ul class="internal"><li><a class="tocitem" href="#Quick-example"><span>Quick example</span></a></li></ul></li><li><a class="tocitem" href="api/">API docs</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Overview</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Overview</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/cite-architecture/CitableCollection.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="CitableCollection"><a class="docs-heading-anchor" href="#CitableCollection">CitableCollection</a><a id="CitableCollection-1"></a><a class="docs-heading-anchor-permalink" href="#CitableCollection" title="Permalink"></a></h1><blockquote><p><em>Work with collections of citable objects.</em></p></blockquote><h2 id="Quick-example"><a class="docs-heading-anchor" href="#Quick-example">Quick example</a><a id="Quick-example-1"></a><a class="docs-heading-anchor-permalink" href="#Quick-example" title="Permalink"></a></h2><p>Citable objects belong to a cataloged collection.  We normally work with a single catalog with records for one or more collections, plus a set of data for each cataloged collection.  We can use Julia&#39;s <code>DataFrame</code> type for the catalog information, and a Vector of <code>DataFrame</code>s for one or more data sets.</p><p>While can work with either a catalog or a data set in distinct <code>DataFrame</code>s, the <code>CitableCollection</code> module also includes a <code>CollectionLibrary</code> structure that has members for a catalog DataFrame, and a Vector of DataFrame for data sets.</p><p>This page briefly shows:</p><ol><li>how to read a catalog into a DataFrame</li><li>how to read datasets into a Vector of DataFrames</li><li>how to read both at once into a <code>CitableLibrary</code> from a single CEX source</li></ol><h3 id="A-cataloged-collection"><a class="docs-heading-anchor" href="#A-cataloged-collection">A cataloged collection</a><a id="A-cataloged-collection-1"></a><a class="docs-heading-anchor-permalink" href="#A-cataloged-collection" title="Permalink"></a></h3><p>A <code>CatalogedCollection</code> records metadata about a single dataset, including the type of data represented by each property of an object.</p><p>We can read data about multiple cataloged collections with the <code>catalogdf</code> function. It creates a DataFrame for a catalog from a CEX source that must include at least one <code>citecollections</code> block and one <code>citeproperties</code> block.  This example builds a DataFrame with the catalog data for a single collection.</p><pre><code class="language-julia hljs">using CitableCollection, DataFrames
+collectionmetadata = &quot;&quot;&quot;#!citecollections
+
+URN|Description|Labelling property|Ordering property|License
+urn:cite2:hmt:vaimg.v1:|Images of the Venetus A manuscriptscript|urn:cite2:hmt:vaimg.v1.caption:||CC-attribution-share-alike
+
+
+#!citeproperties
+
+Property|Label|Type|Authority list
+urn:cite2:hmt:vaimg.v1.urn:|Image URN|Cite2Urn|
+urn:cite2:hmt:vaimg.v1.caption:|Caption|String|
+urn:cite2:hmt:vaimg.v1.rights:|License for binary image data|String|CC-attribution-share-alike,public domain
+&quot;&quot;&quot;
+catdf = catalogdf(collectionmetadata)
+nrow(catdf)
+
+# output
+
+1</code></pre><h3 id="Collection-data"><a class="docs-heading-anchor" href="#Collection-data">Collection data</a><a id="Collection-data-1"></a><a class="docs-heading-anchor-permalink" href="#Collection-data" title="Permalink"></a></h3><p>You can read data for one or more cataloged collections from CEX source. The result is a Vector of DataFrames.  This example has data for a single collection.</p><pre><code class="language-julia hljs">datadbcex = &quot;&quot;&quot;#!citedata
+// Images of the Venetus A manuscript:
+
+urn|caption|rights
+urn:cite2:hmt:vaimg.v1:IMG1r|Folio 1 recto of the Venetus A, photographed in natural light|CC-attribution-share-alike
+urn:cite2:hmt:vaimg.v1:IMG1v|Folio 1 verso of the Venetus A, photographed in natural light|CC-attribution-share-alike
+&quot;&quot;&quot;
+datadfs = collectiondfs(datadbcex, catdf)
+length(datadfs)
+
+# output
+
+1</code></pre><h3 id="Load-a-CitableLibrary"><a class="docs-heading-anchor" href="#Load-a-CitableLibrary">Load a <code>CitableLibrary</code></a><a id="Load-a-CitableLibrary-1"></a><a class="docs-heading-anchor-permalink" href="#Load-a-CitableLibrary" title="Permalink"></a></h3><p>The <code>collectionlibrary</code> function reads from a CEX source that includes <code>citecatalog</code>, <code>citeproperties</code>, and <code>citedata</code> blocks.</p><pre><code class="language-julia hljs">fullcex = &quot;&quot;&quot;#!citecollections
+
+URN|Description|Labelling property|Ordering property|License
+urn:cite2:hmt:vaimg.v1:|Images of the Venetus A manuscriptscript|urn:cite2:hmt:vaimg.v1.caption:||CC-attribution-share-alike
+
+
+#!citeproperties
+
+Property|Label|Type|Authority list
+urn:cite2:hmt:vaimg.v1.urn:|Image URN|Cite2Urn|
+urn:cite2:hmt:vaimg.v1.caption:|Caption|String|
+urn:cite2:hmt:vaimg.v1.rights:|License for binary image data|String|CC-attribution-share-alike,public domain
+
+#!citedata
+// Images of the Venetus A manuscript:
+
+urn|caption|rights
+urn:cite2:hmt:vaimg.v1:IMG1r|Folio 1 recto of the Venetus A, photographed in natural light|CC-attribution-share-alike
+urn:cite2:hmt:vaimg.v1:IMG1v|Folio 1 verso of the Venetus A, photographed in natural light|CC-attribution-share-alike
+&quot;&quot;&quot;
+collectionlib = collectionlibrary(fullcex)
+isa(collectionlib, CollectionLibrary)
+
+# output
+
+true</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API docs »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.10 on <span class="colophon-date" title="Wednesday 3 November 2021 20:38">Wednesday 3 November 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
