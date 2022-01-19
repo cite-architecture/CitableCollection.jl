@@ -4,7 +4,7 @@
 
 ```@docs
 CatalogedCollection
-PropertyConfiguration
+PropertyDefinition
 ```
 
 ## Exported functions

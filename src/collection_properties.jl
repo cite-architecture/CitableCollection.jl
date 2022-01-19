@@ -1,15 +1,17 @@
 
 """Configuration data for a single property in a collection.
 """
-struct PropertyConfiguration
+struct PropertyDefinition <: Citable
     property_urn
     property_label
     property_type
     authority_list
 end
 
+#=
 
-"""Create a DataFrame of `PropertyConfiguration`s 
+
+"""Create a DataFrame of `PropertyDefinition`s 
 from delimited-text source.
 $(SIGNATURES)
 """
@@ -21,7 +23,7 @@ function propertyconfigs(datalines, delim = "|")
         label = parts[2]
         ptype = parts[3]
         authlist = isempty(parts[4]) ? [] : split(parts[4], ",")
-        config = PropertyConfiguration(
+        config = PropertyDefinition(
             urn, label, ptype, authlist
             )
         push!(propertylist, config)
@@ -30,9 +32,10 @@ function propertyconfigs(datalines, delim = "|")
 end
 
 
-"""Extract list of property names from a DataFrame of `PropertyConfiguration` objects.
+"""Extract list of property names from a DataFrame of `PropertyDefinition` objects.
 $(SIGNATURES)
 """
 function configured_propertynames(df)
     map(u -> propertyid(u), df[:, :property_urn])
 end
+=#

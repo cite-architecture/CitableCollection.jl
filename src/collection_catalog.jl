@@ -2,17 +2,19 @@
 """A collection of citable objects.
 """
 struct CatalogedCollection <: Citable
-    urn::Cite2Urn
+    urn
     label
-    labelling_property::Cite2Urn
-    ordering_property # Cite2Urn or nothing
+    labelling_property
+    ordering_property # <:Urn or Nothing
     license
-    propertiesdf
+    propertydefs
 end
 
-CitableTrait(::Type{CatalogedCollection}) = CitableByCite2Urn()
+#CitableTrait(::Type{CatalogedCollection}) = CitableByCite2Urn()
 
 
+
+#=
 """Parse CEX source data into a catalog of `CitableCollection`s.
 $(SIGNATURES)
 
@@ -75,7 +77,7 @@ function catalogdata(blocklist)
 end
 
 
-
+=#
 
 """URN identifying collection.
 $(SIGNATURES)
@@ -96,15 +98,6 @@ end
 
 function cex(coll::CatalogedCollection; delimiter = "|")
     """TBD"""
-end
-
-"""Override Base.print for `CatalogedCollection`.
-$(SIGNATURES)
-Required function for `Citable` abstraction.
-"""
-function print(io::IO, coll::CatalogedCollection)
-    s = string("<", coll.urn, "> ", coll.label)
-    print(io, s)
 end
 
 """Override Base.show for `CatalogedCollection`.
