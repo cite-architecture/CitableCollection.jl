@@ -1,6 +1,6 @@
 module CitableCollection
 using CitableBase, CitableObject, CiteEXchange, CitableText
-using CSV, Tables
+using CSV, Tables, HTTP
 using TypedTables
 
 using Documenter, DocStringExtensions

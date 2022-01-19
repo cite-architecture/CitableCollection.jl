@@ -1,7 +1,6 @@
 using CitableCollection
 using CitableBase
 using CiteEXchange, CitableObject, CitableText
-#using DataFrames
 using Test
 
 
