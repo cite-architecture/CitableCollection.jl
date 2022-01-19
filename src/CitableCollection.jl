@@ -5,9 +5,13 @@ using TypedTables
 
 using Documenter, DocStringExtensions
 
-import Base:  print
-import Base:  show
-import Base:  ==
+#import Base:  show
+#import Base:  ==
+
+import CitableBase: citabletrait
+import CitableBase: urntype
+import CitableBase: urn
+import CitableBase: label
 
 #=
 import CitableBase: CitableTrait
@@ -22,9 +26,13 @@ include("collection_data.jl")
 #include("collection_library.jl")
 #include("reader.jl")
 
+export PropertyDefinition
+export citetype, authlist
+
+
 #export CatalogedCollection
 export CiteCollection
-export PropertyDefinition
+
 export CollectionLibrary
 #export collectiondfs, catalogdf, collectionlibrary
 

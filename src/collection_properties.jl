@@ -8,6 +8,63 @@ struct PropertyDefinition <: Citable
     authority_list
 end
 
+"""Define singleton type for `CitableTrait`."""
+struct CitablePropDef <: CitableTrait end
+
+"""Set value of `CitableTrait` on `PropertyDefinition`
+$(SIGNATURES)
+"""
+function citabletrait(::Type{PropertyDefinition})
+    CitablePropDef()
+end
+
+
+"""Define `urntype` for `PropertyDefinition`
+$(SIGNATURES)
+Required for `CitableTrait`.
+"""
+function urntype(pdef::PropertyDefinition)
+    Cite2Urn
+end
+
+"""Retrieve URN value.
+$(SIGNATURES)
+Required for `CitableTrait`.
+"""
+function urn(pdef::PropertyDefinition)
+    pdef.property_urn
+end
+
+"""Retrieve label for property.
+$(SIGNATURES)
+Required for `CitableTrait`.
+"""
+function label(pdef::PropertyDefinition)
+    pdef.property_label
+end
+
+
+"""Retrieve CITE type for property.
+$(SIGNATURES)
+"""
+function citetype(pdef::PropertyDefinition)
+    pdef.property_type
+end
+
+
+
+"""Retrieve (possibly empty) list of allowed values.
+$(SIGNATURES)
+"""
+function authlist(pdef::PropertyDefinition)
+    pdef.authority_list
+end
+
+
+#=
+data(f, FileReader,"citeproperties")
+=#
+
 #=
 
 
