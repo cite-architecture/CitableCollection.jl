@@ -14,6 +14,12 @@ function show(io::IO, coll::RawDataCollection)
 end
 
 
+"""Override `Base.==` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function ==(c1::RawDataCollection, c2::RawDataCollection)
+    c1.data == c2.data
+end
 
 """Define singleton type for `CitableTrait` value."""
 struct RawTableCitable <: CitableTrait end
