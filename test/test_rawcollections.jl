@@ -2,6 +2,8 @@
     f = joinpath(pwd(), "data", "collectionexample.cex")
     rdcs1 = fromcex(f, RawDataCollection, FileReader, strict = false)
     @test length(rdcs1) == 1
+
+    cexsrc = read(f, String)
     rdcs2 = fromcex(cexsrc, RawDataCollection, strict = false)
     @test rdcs1 == rdcs2
 

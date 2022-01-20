@@ -76,7 +76,7 @@ function fromcex(traitvalue::RawDataCollectionCex, cexsrc::AbstractString, T;
         strictread(cexsrc,  delimiter)
     else
         @warn("Reading CEX data lazily")
-        lazyread(cexsrc,delimiter)
+        lazyread(cexsrc,delimiter) 
     end
 end
 
@@ -98,7 +98,7 @@ function citetable(t::Table)
             push!(coldata, row)
         end
    end
-   NamedTuple{columnnames(t)}(coldata) |> Table
+   NamedTuple{columnnames(t)}(coldata) |> Table 
 end
 
 
@@ -116,6 +116,5 @@ function lazyread(cexsrc::AbstractString, delimiter = "|")
         cdata = citetable(Table(c))
         push!(datacollections, cdata)
     end
-    #length(datacollections) == 1 ? datacollections : datacollections |> Iterators.flatten |> collect
-    datacollections
+    datacollections .|> RawDataCollection
 end
