@@ -16,7 +16,9 @@ function strictread(cexsrc::AbstractString, delimiter = "|")
         # Now convert types as needed.
         for rdc in rdclist
             rdcprops = filter(prop -> urncontains(urn(rdc), urn(prop)), propslist)
-            push!(converted, converttypes(rdc, rdcprops))
+            convertedfields = converttypes(rdc, rdcprops) 
+            @warn("Converted datacolletion to a $(typeof(convertedfields))")
+            push!(converted, convertedfields)
         end
         return converted
     end
@@ -28,24 +30,25 @@ Build up list of col names, list of arrays of col values
 =#
 function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
     sch = Tables.schema(rdc.data)
-    tablecols = sch.names .|> string
-    # if cite2urn or ctsurn, change!
-
-    #sch.types
-
     coldata = []
     colidx = 0
-    for colname in sch.names
+    for rdcprop in rdcprops
         colidx = colidx + 1
-        coltype = sch.types[colidx]
+        colname = sch.names[colidx] #tablecols[colidx]
+        coltype = rdcprop.property_type #sch.types[colidx]
         if coltype == Cite2Urn 
             @warn("NEED TO CONVERT COLUMN")
             @warn("But first peek and see if it's already converted")
-            # If NOT:
-            #idrow = map(row -> Cite2Urn(row.urn), rdc.data)
-            # if CONVERETED:
-            row = map(getproperty(colname), rdc.data)
-            push!(coldata, row)
+            if sch.types[colidx] == Cite2Urn
+                @warn("ALREADY CONVERTED")
+                row = map(getproperty(colname), rdc.data)
+                push!(coldata, row)
+            else
+                urnrow = map(row -> Cite2Urn(row.urn), rdc.data)
+                push!(coldata, urnrow)
+            end
+         
+            
         elseif coltype == CtsUrn
             idrow = map(row -> CtsUrn(row.urn), rdc.data)
             push!(coldata, idrow)
@@ -55,7 +58,7 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
             push!(coldata, row)
         end
     end
-    NamedTuple{sch.names}(coldata) |> Table 
+    NamedTuple{sch.names}(coldata) |> Table  |> RawDataCollection
 end
 
 """True if for all column names in tables of `tablelist`, there is a corresponding
