@@ -8,6 +8,12 @@
 
     expected = [Cite2Urn("urn:cite2:hmt:vaimg.v1:")]    
     @test CitableCollection.collectionsfromprops(props) == expected
+
+    collurn = Cite2Urn("urn:cite2:hmt:vaimg.v1:")
+    expected =  ["urn","caption", "rights"]
+    @test CitableCollection.propertyids(props, collurn) == expected
+
+
 end
 
 
@@ -20,5 +26,7 @@ end
     @test propertynames(t1) == propertynames(t2)
     @test Tables.columntype(t1, :urn) <: AbstractString
     @test Tables.columntype(t2, :urn) == Cite2Urn
-    
+ 
 end
+
+

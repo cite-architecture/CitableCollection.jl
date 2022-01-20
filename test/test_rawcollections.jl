@@ -1,4 +1,4 @@
-@testset "Test lazy construction of `RawDataCollection`s" begin
+@testset "Test lazy construction of `RawDataCollection`s with `CitableTrait`" begin
     f = joinpath(pwd(), "data", "collectionexample.cex")
     rdcs1 = fromcex(f, RawDataCollection, FileReader, strict = false)
     @test length(rdcs1) == 1

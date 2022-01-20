@@ -6,30 +6,86 @@ $(SIGNATURES)
 If any columns of a collection are not configured, it is an error.
 """
 function strictread(cexsrc::AbstractString, delimiter = "|")
-    simpletables = lazyread(cexsrc, delimiter)
+    rdclist = lazyread(cexsrc, delimiter)
     propslist = propertiesfromcex(cexsrc, delimiter)
-
-
-    for t in simpletables
-
-    end
-
-
-    
-    colls = collectionsfromprops(propslist)
-    for blk in blocks(cexsrc, "citedata")
-        headers = split(blk.lines[1], delimiter)
+    colnamescheck = columnnamesok(rdclist, propslist)
+    if colnamescheck == false
+        DomainError(cexsrc, "Invalid configuration of CITE collection.")
+    else
+        converted = RawDataCollection[]
+        # Now convert types as needed.
+        for rdc in rdclist
+            rdcprops = filter(prop -> urncontains(urn(rdc), urn(prop)), propslist)
+            push!(converted, converttypes(rdc, rdcprops))
+        end
+        return converted
     end
 end 
+
+#= 
+Look at conversion in lazy reader.
+Build up list of col names, list of arrays of col values
+=#
+function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
+    sch = Tables.schema(rdc.data)
+    tablecols = sch.names .|> string
+    # if cite2urn or ctsurn, change!
+
+    #sch.types
+
+    coldata = []
+    colidx = 0
+    for colname in sch.names
+        colidx = colidx + 1
+        coltype = sch.types[colidx]
+        if coltype == Cite2Urn 
+            @warn("NEED TO CONVERT COLUMN")
+            @warn("But first peek and see if it's already converted")
+            # If NOT:
+            #idrow = map(row -> Cite2Urn(row.urn), rdc.data)
+            # if CONVERETED:
+            row = map(getproperty(colname), rdc.data)
+            push!(coldata, row)
+        elseif coltype == CtsUrn
+            idrow = map(row -> CtsUrn(row.urn), rdc.data)
+            push!(coldata, idrow)
+        else
+            @warn("Reuse column as is.")
+            row = map(getproperty(colname), rdc.data)
+            push!(coldata, row)
+        end
+    end
+    NamedTuple{sch.names}(coldata) |> Table 
+end
 
 """True if for all column names in tables of `tablelist`, there is a corresponding
 property definition in `propertieslist`.
 $(SIGNATURES)
 """
-function columnnamesok(tablelist::Vector{Table}, propertieslist::Vector{PropertyDefinition})
-    for t in tablelist
+function columnnamesok(rdclist::Vector{RawDataCollection}, propertieslist::Vector{PropertyDefinition})
+    for rdc in rdclist
+        # println(Tables.columnnames(rdc.data))
+        set1 = CitableCollection.propertyids(propertieslist, urn(rdc))  |> Set 
+        set2 = Tables.columnnames(rdc.data) .|> string  |> Set
+        if set1 != set2
+            @warn("Column names in table did not match configured values for collection $(urn(rdc)): $(set1) != $(set2)")
+            return false
+        end
     end
+    true
 end
+
+
+
+"""Compute property names for properties in a list of `PropertyDefinition`s
+matching a give collection URN.
+$(SIGNATURES)
+"""
+function propertyids(propslist::Vector{PropertyDefinition}, collectionurn::Cite2Urn)
+    props = filter(prop -> urncontains(collectionurn, urn(prop)), propslist)
+    map(prop -> propertyid(urn(prop)), props)
+end
+
 
 """Compute a list of URNs identifying collections from a list of `PropertyDefinition`s.
 $(SIGNATURES)
