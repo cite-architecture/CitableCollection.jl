@@ -22,7 +22,8 @@ import CitableBase: cex
 import CitableBase: fromcex
 
 include("collection_properties.jl")
-include("collection_data.jl")
+include("collection_data_raw.jl")
+include("collection_data_cooked.jl")
 
 
 #include("collection_catalog.jl")
@@ -33,7 +34,7 @@ include("collection_data.jl")
 export PropertyDefinition
 export citetype, authlist
 
-export CiteCollection
+export RawDataCollection
 
 
 #export CatalogedCollection
