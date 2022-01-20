@@ -5,6 +5,51 @@ struct RawDataCollection
     data::TypedTables.Table
 end
 
+
+"""Override `Base.show` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function show(io::IO, coll::RawDataCollection)
+    print(io,  "Citable collection of ", length(coll.data), " items with automatically inferred schema.")
+end
+
+
+
+"""Define singleton type for `CitableTrait` value."""
+struct RawTableCitable <: CitableTrait end
+
+"""Set `CitableTrait` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function citabletrait(::Type{RawDataCollection})
+    RawTableCitable()
+end
+
+"""Compute URN for entire collection.
+$(SIGNATURES)
+"""
+function urn(rdc::RawDataCollection)
+    rdc.data[1].urn |> dropobject
+end
+
+"""Define URN type for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function urntype(rdc::RawDataCollection)
+    Cite2Urn
+end
+
+"""Label collection.
+$(SIGNATURES)
+"""
+function label(rdc::RawDataCollection)
+   string(rdc)
+end
+
+
+
+
+
 """Define singleton type for `CexTrait`."""
 struct RawDataCollectionCex <: CexTrait end
 
@@ -65,7 +110,7 @@ has the unique identifier for objects in the collection.
 """
 function lazyread(cexsrc::AbstractString, delimiter = "|")
     datablocks = blocks(cexsrc, "citedata")
-    datacollections = []
+    datacollections = Table[]
     for blk in datablocks
         c = CSV.File(IOBuffer(join(blk.lines, "\n")), delim = delimiter)
         cdata = citetable(Table(c))

@@ -6,14 +6,30 @@ $(SIGNATURES)
 If any columns of a collection are not configured, it is an error.
 """
 function strictread(cexsrc::AbstractString, delimiter = "|")
-    #lazyread(cexsrc, delimiter)
+    simpletables = lazyread(cexsrc, delimiter)
     propslist = propertiesfromcex(cexsrc, delimiter)
+
+
+    for t in simpletables
+
+    end
+
+
+    
     colls = collectionsfromprops(propslist)
     for blk in blocks(cexsrc, "citedata")
         headers = split(blk.lines[1], delimiter)
     end
 end 
 
+"""True if for all column names in tables of `tablelist`, there is a corresponding
+property definition in `propertieslist`.
+$(SIGNATURES)
+"""
+function columnnamesok(tablelist::Vector{Table}, propertieslist::Vector{PropertyDefinition})
+    for t in tablelist
+    end
+end
 
 """Compute a list of URNs identifying collections from a list of `PropertyDefinition`s.
 $(SIGNATURES)

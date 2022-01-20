@@ -6,6 +6,7 @@ using TypedTables
 using Documenter, DocStringExtensions
 
 import Base: ==
+import Base: show
 
 import CitableBase: citabletrait
 import CitableBase: urntype

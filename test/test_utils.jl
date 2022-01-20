@@ -16,6 +16,9 @@ end
     blk = blocks(f, FileReader, "citedata")[1]
     t1 = CSV.File(IOBuffer(join(blk.lines, "\n")), delim = "|") |> Table
     t2 = CitableCollection.citetable(t1)
+    
+    @test propertynames(t1) == propertynames(t2)
     @test Tables.columntype(t1, :urn) <: AbstractString
     @test Tables.columntype(t2, :urn) == Cite2Urn
+    
 end
