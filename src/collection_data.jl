@@ -5,59 +5,64 @@ struct CiteCollection
     data::TypedTables.Table
 end
 
+"""Define singleton type for `CexTrait`."""
 struct CiteCollectionCex <: CexTrait end
+
+"""Assign `CexTrait` for `CiteCollection`.
+$(SIGNATURES)
+"""
 function cextrait(::Type{CiteCollection})
     CiteCollectionCex()
 end
 
 function fromcex(traitvalue::CiteCollectionCex, cexsrc::AbstractString, T;
     delimiter = "|", configuration = nothing, strict = true)
-    @warn("fromcex: read source type $(T)")
     if strict
         @warn("Strict CEX reading not yet implemented")
-        strictread(cexsrc, T, delimiter)
+        strictread(cexsrc,  delimiter)
     else
-        @warn("Read lazily")
-        lazyread(cexsrc, T, delimiter)
+        @warn("Reading CEX data lazily")
+        lazyread(cexsrc,delimiter)
     end
 end
 
-function strictread(cexsrc::AbstractString, StringReader, delimiter = "|")
-    lazyread(cexsrc, StringReader, delimiter)
+
+function strictread(cexsrc::AbstractString, delimiter = "|")
+    lazyread(cexsrc, delimiter)
 end
 
-#=
-function lazyread(url::AbstractString, UrlReader, delimiter = "|")
-    cexsrc = HTTP.get(url).body |> String
-    lazyread(cexsrc, StringReader, delimiter)
+
+"""
+$(SIGNATURES)
+"""
+function citetable(t::Table)
+    coldata = []
+   for col in columnnames(t)
+        if col == :urn 
+            idrow = map(row -> Cite2Urn(row.urn), t)
+            push!(coldata, idrow)
+        else
+            row = map(getproperty(col), t)
+            push!(coldata, row)
+        end
+   end
+   NamedTuple{columnnames(t)}(coldata) |> Table
 end
 
-function lazyread(f::AbstractString, FileReader, delimiter = "|")
-    cexsrc = read(f, String)
-    lazyread(cexsrc, StringReader, delimiter = "|")
-end
-=#
 
-function lazyread(f::AbstractString, delimiter = "|")
-    println("read string ")
-end
-
-# Generator to convert urn type provided you know what column is what
-#  Table((urn=Cite2Urn(row.urn), caption=row.caption, rights = row.rights) for row in cc.data)
-#
-#
-#=
-for k in keys(r)
-    println(r[k])
-end
-=#
-#  r[Symbol("urn")]
-
-#=
-for r in cc.data
-    for c in columnnames(cc.data)
-        print(r[c], "|" ) 
+"""Read CITE collections from a CEX source without reference to
+`citeproperties` configuration.
+$(SIGNATURES)
+Collections are assumed to have a field named `urn` that 
+has the unique identifier for objects in the collection.
+"""
+function lazyread(cexsrc::AbstractString, delimiter = "|")
+    datablocks = blocks(cexsrc, "citedata")
+    datacollections = []
+    for blk in datablocks
+        c = CSV.File(IOBuffer(join(blk.lines, "\n")), delim = delimiter)
+        cdata = citetable(Table(c))
+        push!(datacollections, cdata)
     end
-    println()
+    length(datacollections) == 1 ? datacollections : datacollections |> Iterators.flatten |> collect
 end
-=#
