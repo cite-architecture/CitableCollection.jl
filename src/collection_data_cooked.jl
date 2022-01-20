@@ -24,34 +24,33 @@ function strictread(cexsrc::AbstractString, delimiter = "|")
     end
 end 
 
-#= 
-Look at conversion in lazy reader.
-Build up list of col names, list of arrays of col values
-=#
+
 function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
     sch = Tables.schema(rdc.data)
     coldata = []
     colidx = 0
     for rdcprop in rdcprops
         colidx = colidx + 1
+        @warn("==>At index $(colidx), property $(rdcprop)")
         colname = sch.names[colidx] #tablecols[colidx]
         coltype = rdcprop.property_type #sch.types[colidx]
         if coltype == Cite2Urn 
-            @warn("NEED TO CONVERT COLUMN")
-            @warn("But first peek and see if it's already converted")
+            #@warn("CHECK ON CONVERTING COLUMN...")
+            @warn("See if  already converted: $(sch.types[colidx]) for $(sch.names[colidx])")
             if sch.types[colidx] == Cite2Urn
                 @warn("ALREADY CONVERTED")
                 row = map(getproperty(colname), rdc.data)
                 push!(coldata, row)
             else
-                urnrow = map(row -> Cite2Urn(row.urn), rdc.data)
+                @warn("NOT yet convereted")
+                urnrow = map(row -> Cite2Urn(row[colname]), rdc.data)
                 push!(coldata, urnrow)
             end
          
             
         elseif coltype == CtsUrn
-            idrow = map(row -> CtsUrn(row.urn), rdc.data)
-            push!(coldata, idrow)
+            urnrow = map(row -> CtsUrn(row.urn), rdc.data)
+            push!(coldata, urnrow)
         else
             @warn("Reuse column as is.")
             row = map(getproperty(colname), rdc.data)
