@@ -9,6 +9,9 @@ function strictread(cexsrc::AbstractString, delimiter = "|")
     #lazyread(cexsrc, delimiter)
     propslist = propertiesfromcex(cexsrc, delimiter)
     colls = collectionsfromprops(propslist)
+    for blk in blocks(cexsrc, "citedata")
+        headers = split(blk.lines[1], delimiter)
+    end
 end 
 
 
@@ -18,8 +21,6 @@ $(SIGNATURES)
 function collectionsfromprops(proplist::Vector{PropertyDefinition})
     map(prop -> dropobject(dropproperty(prop.property_urn)), proplist) |> unique
 end
-
-
 
 """Construct a list of `PropertyDefinition`s from a `cexsrc`.
 $(SIGNATURES)

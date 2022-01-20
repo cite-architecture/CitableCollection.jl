@@ -1,6 +1,7 @@
 using CitableCollection
 using CitableBase
 using CiteEXchange, CitableObject, CitableText
+using CSV, TypedTables, Tables
 using Test
 
 
