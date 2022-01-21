@@ -5,7 +5,9 @@
 
 A Julia module for working with collections of citable objects.
 
-Current status: 
+## Roadmap to 1.0 release
 
-- very early release
-- in the issue tracker, the `1.0` milestone outlines some issues to resolve for a full 1.0 release.
+See milestones in the issue tracker for more detailed lists of issues to resolve for each release.
+
+- **v0.4.x**: complete rewrite using `TypedTables` for underlying data manipulation, and fully implementing behaviors for citable objects and citable collections specified in the `CitableBase` package
+- **1.0.0**: complete validation of all CEX blocks contributing to a collection; navigation functions for naturally ordered collections.
