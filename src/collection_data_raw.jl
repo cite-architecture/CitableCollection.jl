@@ -78,7 +78,6 @@ and other columns are assigned types by `CSV.File`.
 function fromcex(traitvalue::RawDataCollectionCex, cexsrc::AbstractString, T;
     delimiter = "|", configuration = nothing, strict = true)
     if strict
-        @warn("Strict CEX reading not yet implemented")
         strictread(cexsrc,  delimiter)
     else
         @warn("Reading CEX data lazily")

@@ -31,18 +31,18 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
     colidx = 0
     for rdcprop in rdcprops
         colidx = colidx + 1
-        @warn("==>At index $(colidx), property $(rdcprop)")
+        @debug("==>At index $(colidx), property $(rdcprop)")
         colname = sch.names[colidx] #tablecols[colidx]
         coltype = rdcprop.property_type #sch.types[colidx]
         if coltype == Cite2Urn 
             #@warn("CHECK ON CONVERTING COLUMN...")
             @warn("See if  already converted: $(sch.types[colidx]) for $(sch.names[colidx])")
             if sch.types[colidx] == Cite2Urn
-                @warn("ALREADY CONVERTED")
+                @debug("ALREADY CONVERTED")
                 row = map(getproperty(colname), rdc.data)
                 push!(coldata, row)
             else
-                @warn("NOT yet convereted")
+                @debug("NOT yet convereted")
                 urnrow = map(row -> Cite2Urn(row[colname]), rdc.data)
                 push!(coldata, urnrow)
             end
@@ -52,7 +52,7 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
             urnrow = map(row -> CtsUrn(row.urn), rdc.data)
             push!(coldata, urnrow)
         else
-            @warn("Reuse column as is.")
+            @debug("Reuse column as is.")
             row = map(getproperty(colname), rdc.data)
             push!(coldata, row)
         end
