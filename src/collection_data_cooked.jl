@@ -1,4 +1,3 @@
-
 """Read data for citable collections from `cexsrc`.
 Determine types of columns for each table from configuration
 in `citeproperties` section of the CEX.
@@ -17,14 +16,16 @@ function strictread(cexsrc::AbstractString, delimiter = "|")
         for rdc in rdclist
             rdcprops = filter(prop -> urncontains(urn(rdc), urn(prop)), propslist)
             convertedfields = converttypes(rdc, rdcprops) 
-            @warn("Converted datacolletion to a $(typeof(convertedfields))")
+            @debug("Converted datacollection to a $(typeof(convertedfields))")
             push!(converted, convertedfields)
         end
         return converted
     end
 end 
 
-
+"""Convert any string-value columns in a `RawDataCollection` configured for URN values in their property definitions to the appropriate type of URN value.
+$(SIGNATURES)
+"""
 function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
     sch = Tables.schema(rdc.data)
     coldata = []
@@ -32,32 +33,35 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
     for rdcprop in rdcprops
         colidx = colidx + 1
         @debug("==>At index $(colidx), property $(rdcprop)")
+        @debug("==>Schema: $(sch.types[colidx]) for $(sch.names[colidx])")
         colname = sch.names[colidx] #tablecols[colidx]
         coltype = rdcprop.property_type #sch.types[colidx]
+        @debug("==>CITE type: $(sch.names[colidx]) $(coltype) $(propertyid(rdcprop.property_urn))")
         if coltype == Cite2Urn 
-            #@warn("CHECK ON CONVERTING COLUMN...")
-            @warn("See if  already converted: $(sch.types[colidx]) for $(sch.names[colidx])")
+            @debug("SEE if  already converted: $(sch.types[colidx]) for $(sch.names[colidx])")
             if sch.types[colidx] == Cite2Urn
                 @debug("ALREADY CONVERTED")
                 row = map(getproperty(colname), rdc.data)
                 push!(coldata, row)
             else
-                @debug("NOT yet convereted")
+                @debug("NOT yet converted. Pusing Cite2Urns to coldata.")
                 urnrow = map(row -> Cite2Urn(row[colname]), rdc.data)
                 push!(coldata, urnrow)
             end
          
             
         elseif coltype == CtsUrn
-            urnrow = map(row -> CtsUrn(row.urn), rdc.data)
+            urnrow = map(row -> CtsUrn(row[colname]), rdc.data)
             push!(coldata, urnrow)
         else
-            @debug("Reuse column as is.")
+            @debug("REUSE column as is.")
             row = map(getproperty(colname), rdc.data)
             push!(coldata, row)
         end
     end
-    NamedTuple{sch.names}(coldata) |> Table  |> RawDataCollection
+    t = NamedTuple{sch.names}(coldata) |> Table # |> rawdatacollection 
+    tlabel = "Citable collection of $(length(t)) items with schema specified from `citeproperties` settings."
+    RawDataCollection(t, tlabel)    
 end
 
 """True if for all column names in tables of `tablelist`, there is a corresponding
@@ -76,8 +80,6 @@ function columnnamesok(rdclist::Vector{RawDataCollection}, propertieslist::Vecto
     end
     true
 end
-
-
 
 """Compute property names for properties in a list of `PropertyDefinition`s
 matching a give collection URN.
@@ -106,8 +108,3 @@ function propertiesfromcex(cexsrc::AbstractString, delimiter = "|")
     end
     proplist
 end
-
-# pds = map(ln -> fromcex(ln, PropertyDefinition, delimiter = "#"),   data(f, FileReader, "citeproperties")) 
-# ccs[2][1].urn |> dropobject 
-# filter to collect PropertyDefinitions for collection.
-# Then match propertydefinition to table columns

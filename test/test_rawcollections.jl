@@ -12,3 +12,10 @@
     @test label(rdc) == "Citable collection of 2 items with automatically inferred schema."
     @test urntype(rdc) == Cite2Urn
 end
+
+@testset "Test CEX trait of `RawDataCollection`"  begin
+    f = joinpath(pwd(), "data", "hmtextract.cex")
+    lazylist =  fromcex(f, RawDataCollection, FileReader, delimiter = "#", strict = false)
+    strictlist =  fromcex(f, RawDataCollection, FileReader, delimiter = "#")
+    @test length(lazylist) == length(strictlist)
+end
