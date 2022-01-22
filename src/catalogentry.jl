@@ -1,4 +1,5 @@
 """Metadata for a collection of citable objects.
+$(SIGNATURES)
 """
 struct CiteCatalogEntry <: Citable
     urn::Cite2Urn
