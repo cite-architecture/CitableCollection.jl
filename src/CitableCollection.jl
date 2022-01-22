@@ -25,22 +25,17 @@ import CitableBase: fromcex
 include("collection_properties.jl")
 include("collection_data_raw.jl")
 include("collection_data_cooked.jl")
+include("catalogentry.jl")
+include("catalog.jl")
 
-
-#include("collection_catalog.jl")
-#
-#include("collection_library.jl")
-#include("reader.jl")
 
 export PropertyDefinition
 export citetype, authlist
 
 export RawDataCollection
 
-
-#export CatalogedCollection
-
-#export CollectionLibrary
-#export collectiondfs, catalogdf, collectionlibrary
+export CiteCatalogEntry
+export CiteCollectionCatalog
+export CatalogedCollection
 
 end # module
