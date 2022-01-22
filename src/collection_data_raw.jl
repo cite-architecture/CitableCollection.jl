@@ -58,6 +58,25 @@ function label(rdc::RawDataCollection)
 end
 
 
+function istable(rdc::RawDataCollection)
+    true
+end
+
+function columns(rdc::RawDataCollection)
+    columns(rdc.data)
+end
+
+
+function rows(rdc::RawDataCollection)
+    rows(rdc.data)
+end
+
+
+function schema(rdc::RawDataCollection)
+    schema(rdc.data)
+end
+
+
 
 """Define singleton type for `CexTrait`."""
 struct RawDataCollectionCex <: CexTrait end

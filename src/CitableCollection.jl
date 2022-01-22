@@ -22,6 +22,12 @@ import CitableBase: cextrait
 import CitableBase: cex
 import CitableBase: fromcex
 
+import Tables: istable
+import Tables: columns
+import Tables: rows
+import Tables: schema
+
+
 include("collection_properties.jl")
 include("collection_data_raw.jl")
 include("collection_data_cooked.jl")
