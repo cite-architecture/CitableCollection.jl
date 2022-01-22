@@ -88,6 +88,19 @@ function cextrait(::Type{RawDataCollection})
     RawDataCollectionCex()
 end
 
+
+#Property|Label|Type|Authority list
+function cexschema(rdc::RawDataCollection)
+    sch = Tables.schema(rdc)
+    count = 0
+    lines =  ["#!citeproperties"]
+    for n in sch.names
+        count = count + 1
+        push!(lines, string(n) * ": " * CitableCollection.cpropfortype(sch.types[count]))
+    end
+    join(lines, "\n")
+end
+
 """Instantiate a (possibly empty) list of `RawDataCollection`s from CEX source.
 $(SIGNATURES)
 If `strict` is `true`, then the types of the columns are set from reading
