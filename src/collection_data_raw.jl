@@ -4,11 +4,34 @@ $(SIGNATURES)
 struct RawDataCollection
     data::TypedTables.Table
     label::AbstractString
+    properties::Vector{PropertyDefinition}
 end
 
+"""Compose `PropertyDefinition`s for a table.
+$(SIGNATURES)
+"""
+function propertydefinitions(t::Table)
+    sch = Tables.schema(t)
+    props = PropertyDefinition[]
+    count = 0
+    for n in sch.names
+        count = count + 1
+        propname = string(n)
+        proplabel = "Property $(propname)"
+        proptype = CitableCollection.cpropfortype(sch.types[count])
+        push!(props, PropertyDefinition(propname, proplabel, proptype, []) )
+        #string(n) * ": " * CitableCollection.cpropfortype(sch.types[count]))
+    end
+    props
+end
+
+"""Create a `RawDataCollection` from a `Table`
+by generating label and properties automatically.
+$(SIGNATURES)
+"""
 function rawdatacollection(t::TypedTables.Table)
-    label = join(["Citable collection of ", length(t) , " items with automatically inferred schema."])
-    RawDataCollection(t, label)
+    label = string("Citable collection of ", length(t), " items with automatically inferred schema.")
+    RawDataCollection(t, label, propertydefinitions(t))
 end
 
 """Override `Base.show` for `RawDataCollection`.
@@ -89,17 +112,7 @@ function cextrait(::Type{RawDataCollection})
 end
 
 
-#Property|Label|Type|Authority list
-function cexschema(rdc::RawDataCollection)
-    sch = Tables.schema(rdc)
-    count = 0
-    lines =  ["#!citeproperties"]
-    for n in sch.names
-        count = count + 1
-        push!(lines, string(n) * ": " * CitableCollection.cpropfortype(sch.types[count]))
-    end
-    join(lines, "\n")
-end
+
 
 """Instantiate a (possibly empty) list of `RawDataCollection`s from CEX source.
 $(SIGNATURES)

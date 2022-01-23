@@ -61,7 +61,7 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
     end
     t = NamedTuple{sch.names}(coldata) |> Table # |> rawdatacollection 
     tlabel = "Citable collection of $(length(t)) items with schema specified from `citeproperties` settings."
-    RawDataCollection(t, tlabel)    
+    RawDataCollection(t, tlabel, propertydefinitions(t))    
 end
 
 """True if for all column names in tables of `tablelist`, there is a corresponding
