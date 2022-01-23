@@ -4,7 +4,7 @@ $(SIGNATURES)
 struct RawDataCollection
     data::TypedTables.Table
     label::AbstractString
-    properties::Vector{PropertyDefinition}
+    propertydefinitions::Vector{PropertyDefinition}
 end
 
 """Compose `PropertyDefinition`s for a table.
@@ -18,7 +18,7 @@ function propertydefinitions(t::Table)
         count = count + 1
         propname = string(n)
         proplabel = "Property $(propname)"
-        proptype = CitableCollection.cpropfortype(sch.types[count])
+        proptype = sch.types[count]
         push!(props, PropertyDefinition(propname, proplabel, proptype, []) )
         #string(n) * ": " * CitableCollection.cpropfortype(sch.types[count]))
     end
@@ -112,6 +112,30 @@ function cextrait(::Type{RawDataCollection})
 end
 
 
+function cex(rdc::RawDataCollection; delimiter = "|")
+    # Do a cite properties section
+    proplines = ["#!citeproperties",
+        "Property|Label|Type|Authority list"
+    ]
+    for p in rdc.propertydefinitions
+        push!(proplines, cex(p))
+    end
+
+    # Do a citedata section
+    sch = Tables.schema(rdc)
+    datalines = [
+        "#!citedata",
+        join(sch.names .|> string |> collect, delimiter)
+        ]
+    for row in Tables.rows(rdc)
+        rowdata = []
+        for n in sch.names
+            push!(rowdata, row[n])
+        end
+        push!(datalines, join(rowdata, delimiter))
+    end
+    join(proplines, "\n") * "\n\n" *  join(datalines, "\n")
+end
 
 
 """Instantiate a (possibly empty) list of `RawDataCollection`s from CEX source.

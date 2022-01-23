@@ -131,12 +131,13 @@ $(SIGNATURES)
 Required for `CexTrait`.
 """
 function cex(pd::PropertyDefinition; delimiter = "|")
-    join([
+    str = join([
         string(pd.property_urn),
         pd.property_label,
         cpropfortype(pd),
         join(pd.authority_list, ",")
     ], delimiter)
+    isempty(pd.authority_list) ? str * delimiter : str
 end
 
 
@@ -154,7 +155,7 @@ type.
 $(SIGNATURES)
 """
 function cpropfortype(citeproptype)
-    #@warn("Find string for ", citeprop)
+    @debug("Find string label for type ", citeproptype)
     if citeproptype == Bool
         "boolean"
     elseif citeproptype <: Number
