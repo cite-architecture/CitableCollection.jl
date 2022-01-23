@@ -4,3 +4,63 @@
 struct CiteCollectionCatalog
     entries::Vector{CiteCatalogEntry}
 end
+
+function show(io::IO, catalog::CiteCollectionCatalog)
+    if catalog.entries == 1
+        print(io, "Catalog  of ", length(catalog.entries), " citable collection")
+    else
+        print(io, "Catalog  of ", length(catalog.entries), " citable collections")
+    end
+end
+
+
+struct CitableCollectionCatalog <: CitableCollectionTrait end
+
+function citablecollectiontrait(::Type{CiteCatalogEntry})
+    CitableCollectionCatalog()
+end
+
+function urntype(catalog::CiteCollectionCatalog)
+    Cite2Urn
+end
+
+struct CatalogComparable <: UrnComparisonTrait end
+function urncomparisontrait(::Type{CiteCollectionCatalog})
+    CatalogComparable()
+end
+
+function urnequals(urn::Cite2Urn, catalog::CiteCollectionCatalog)
+    filter(item -> urnequals(item.urn, urn), catalog.entries)
+end
+
+function urncontains(urn::Cite2Urn, catalog::CiteCollectionCatalog)
+    filter(item -> urncontains(item.urn, urn), catalog.entries)
+end
+
+function urnsimilar(urn::Cite2Urn, catalog::CiteCollectionCatalog )
+    filter(item -> urnsimilar(item.urn, urn), catalog.entries)
+end
+
+
+struct CatalogCex <: CexTrait end
+function cextrait(::Type{CiteCollectionCatalog})
+    CatalogCex()
+end
+
+
+function cex(catalog::CiteCollectionCatalog; delimiter = "|")
+    header = "#!citecollection\n"
+    strings = map(entry -> cex(entry, delimiter=delimiter), catalog.entries)
+    header * join(strings, "\n")
+end
+
+function fromcex(trait::CatalogCex, cexsrc::AbstractString, T;
+    delimiter = "|", configuration = nothing, strict = true)
+    datalines = data(cexsrc, "citecollections")
+    entries = CiteCatalogEntry[]
+    for ln in datalines
+
+        push!(entries, fromcex(ln, CiteCatalogEntry, delimiter = delimiter))
+    end
+    CiteCollectionCatalog(entries)
+end
