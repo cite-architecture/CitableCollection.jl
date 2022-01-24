@@ -10,9 +10,9 @@ end
 
 function show(io::IO, coll::CatalogedCollection)
     if coll.data == 1
-        print(io, "Cataloged collection containing ", length(coll.data), " citable object")
+        print(io, coll.catalogentry.label, "\nA cataloged collection containing ", length(coll.data), " citable object")
     else
-        print(io, "Cataloged collection containing ", length(coll.data), " citable objects")
+        print(io, coll.catalogentry.label, "\nA cataloged collection containing ", length(coll.data), " citable objects")
     end
 end
 
