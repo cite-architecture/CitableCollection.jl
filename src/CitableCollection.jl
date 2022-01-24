@@ -33,7 +33,7 @@ include("collection_data_raw.jl")
 include("collection_data_cooked.jl")
 include("catalogentry.jl")
 include("catalog.jl")
-
+include("collection_cataloged.jl")
 
 export PropertyDefinition
 export citetype, authlist

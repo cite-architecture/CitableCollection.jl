@@ -9,10 +9,10 @@ end
 
 
 function show(io::IO, coll::CatalogedCollection)
-    if catalog.entries == 1
+    if coll.data == 1
         print(io, "Cataloged collection containing ", length(coll.data), " citable object")
     else
-        print(io, "Cataloged collection containing ", length(catalog.entries), " citable objects")
+        print(io, "Cataloged collection containing ", length(coll.data), " citable objects")
     end
 end
 
@@ -52,22 +52,48 @@ end
 
 function cex(coll::CatalogedCollection; delimiter = "|")
     # COMPOSE citecollections block
-    # COMPOSE citeproperties block
-    # COMPOSE citedata block
-    #=
-    header = "#!citecollection\n"
-    strings = map(entry -> cex(entry, delimiter=delimiter), catalog.entries)
-    header * join(strings, "\n")
-    =#
+    ccollines = ["#!citecollections",
+    join(["URN", "Description","Labelling property",
+    "Ordering property", "License"], delimiter),
+    ]
+    orderprop = ""
+    if ! isnothing(coll.catalogentry.ordering_property)
+        orderprop = string(coll.catalogentry.ordering_property)
+    end
+
+    push!(ccollines, 
+        join([string(coll.catalogentry.urn), 
+            coll.catalogentry.label,
+            string(coll.catalogentry.labelling_property),
+            orderprop,
+            coll.catalogentry.license
+            ], delimiter
+        )
+    )
+    
+    join(ccollines, "\n") * cex(rawdatacollection(coll.data))
 end
 
-function fromcex(trait::CatalogCex, cexsrc::AbstractString, T;
+
+# returns a list
+function fromcex(trait::CatalogedCollectionCex, cexsrc::AbstractString, T;
     delimiter = "|", configuration = nothing, strict = true)
 
-    # Call fromcex to:
-    # - get collections
-    # - get catalog
-    #
-    # cycle through collections
-    # add catalog entry
+    rawcollections = fromcex(cexsrc, RawDataCollection, delimiter = delimiter)
+    cat = fromcex(cexsrc, CiteCollectionCatalog, delimiter = delimiter)
+
+
+    results = CatalogedCollection[]
+    for c in rawcollections
+        entries = urnequals(urn(c), cat)
+        if length(entries) > 1
+            throw(DomainError(urn(c)), "Multiple catalog entries for collection $(urn(c))")
+        elseif isempty(entries)
+            throw(DomainError(urn(c)), "No catalog entry for collection $(urn(c))")
+        end
+        push!(results, CatalogedCollection(entries[1], c.data))
+    end
+    @warn("Found ", length(results), " collections")
+    results
+
 end
