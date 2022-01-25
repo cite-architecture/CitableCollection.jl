@@ -64,12 +64,23 @@ function urncomparisontrait(::Type{CiteCatalogEntry})
     CatEntryComparable()
 end
 
+"""True if URN for `catentry` equals `u`
+$(SIGNATURES)
+"""
 function urnequals(u::Cite2Urn, catentry::CiteCatalogEntry)
     u == catentry.urn
 end
+
+"""True if `u` contains URN for `catentry`.
+$(SIGNATURES)
+"""
 function urncontains(u::Cite2Urn, catentry::CiteCatalogEntry)
     urncontains(u, catentry.urn)
 end
+
+"""True if `u` and URN for `catentry` are URN similar.
+$(SIGNATURES)
+"""
 function urnsimilar(u::Cite2Urn, catentry::CiteCatalogEntry)
     urnsimilar(u, catentry.urn)
 end
