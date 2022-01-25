@@ -34,8 +34,8 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
         colidx = colidx + 1
         @debug("==>At index $(colidx), property $(rdcprop)")
         @debug("==>Schema: $(sch.types[colidx]) for $(sch.names[colidx])")
-        colname = sch.names[colidx] #tablecols[colidx]
-        coltype = rdcprop.property_type #sch.types[colidx]
+        colname = sch.names[colidx]
+        coltype = rdcprop.property_type
         @debug("==>CITE type: $(sch.names[colidx]) $(coltype) $(propertyid(rdcprop.property_urn))")
         if coltype == Cite2Urn 
             @debug("SEE if  already converted: $(sch.types[colidx]) for $(sch.names[colidx])")
@@ -59,9 +59,9 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
             push!(coldata, row)
         end
     end
-    t = NamedTuple{sch.names}(coldata) |> Table # |> rawdatacollection 
-    tlabel = "Citable collection of $(length(t)) items with schema specified from `citeproperties` settings."
-    RawDataCollection(t, tlabel, propertydefinitions(t))    
+    t = NamedTuple{sch.names}(coldata) |> Table
+    tlabel = "Citable collection of $(length(t)) items with schema specified from `citeproperties` settings."    
+    RawDataCollection(t, tlabel, rdcprops)    
 end
 
 """True if for all column names in tables of `tablelist`, there is a corresponding
@@ -70,7 +70,6 @@ $(SIGNATURES)
 """
 function columnnamesok(rdclist::Vector{RawDataCollection}, propertieslist::Vector{PropertyDefinition})
     for rdc in rdclist
-        # println(Tables.columnnames(rdc.data))
         set1 = CitableCollection.propertyids(propertieslist, urn(rdc))  |> Set 
         set2 = Tables.columnnames(rdc.data) .|> string  |> Set
         if set1 != set2

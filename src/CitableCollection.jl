@@ -7,6 +7,7 @@ using Documenter, DocStringExtensions
 
 import Base: ==
 import Base: show
+import Base: length
 
 import CitableBase: citabletrait
 import CitableBase: urntype
@@ -26,6 +27,8 @@ import Tables: istable
 import Tables: columns
 import Tables: rows
 import Tables: schema
+import Tables: eltype
+
 
 
 include("collection_properties.jl")

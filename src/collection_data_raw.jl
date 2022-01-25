@@ -80,25 +80,51 @@ function label(rdc::RawDataCollection)
    string(rdc)
 end
 
-
+"""Implement `istable` for `RawDataCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
 function istable(rdc::RawDataCollection)
     true
 end
 
+"""Implement `columns` for `RawDataCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
 function columns(rdc::RawDataCollection)
     columns(rdc.data)
 end
 
-
+"""Implement `rows` for `RawDataCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
 function rows(rdc::RawDataCollection)
     rows(rdc.data)
 end
 
 
+"""Implement `schema` for `RawDataCollection`.
+$(SIGNATURES)
+"""
 function schema(rdc::RawDataCollection)
     schema(rdc.data)
 end
 
+"""Implement `length` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function length(rdc::RawDataCollection)
+    length(rdc.data)
+end
+
+"""Implement `eltype` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function eltype(rdc::RawDataCollection)
+    eltype(rdc.data)
+end
 
 
 """Define singleton type for `CexTrait`."""
