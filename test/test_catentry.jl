@@ -14,15 +14,21 @@
     @test label(catentry) == "Pages of the Escorial Y 1.1 manuscript"
 end
 
-
-
-@testset "Test URN comparison trait of a `CiteCatalogEntry" begin
-    #
-end
-
 @testset "Test CEX trait of a `CiteCatalogEntry" begin
     cexstr = "urn:cite2:hmt:e3pages.v1:#Escorial Y 1.1 manuscript#urn:cite2:hmt:e3pages.v1.label:#urn:cite2:hmt:e3pages.v1.sequence:#CC-attribution-share-alike"
     catentry = fromcex(cexstr, CiteCatalogEntry, delimiter = "#")
     @test catentry isa CiteCatalogEntry
     @test cex(catentry, delimiter = "#") == cexstr
+end
+
+
+@testset "Test URN comparison trait of a `CiteCatalogEntry" begin
+    cexstr = "urn:cite2:hmt:e3pages.v1:#Escorial Y 1.1 manuscript#urn:cite2:hmt:e3pages.v1.label:#urn:cite2:hmt:e3pages.v1.sequence:#CC-attribution-share-alike"
+    catentry = fromcex(cexstr, CiteCatalogEntry, delimiter = "#")
+    @test urncomparable(catentry)
+    
+    collurn = Cite2Urn("urn:cite2:hmt:e3pages.v1:")
+    @test urnequals(collurn, catentry)
+    @test urncontains(collurn, catentry)
+    @test urnsimilar(collurn, catentry)
 end

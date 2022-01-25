@@ -55,40 +55,43 @@ function label(collection::CiteCatalogEntry)
     collection.label
 end
 
-
+"""Define singleton type for value of `UrnComparisonTrait`."""
 struct CatEntryComparable <: UrnComparisonTrait end
-
+"""Assign value of `UrnComparisonTrait` for `CiteCatalogEntry`.
+$(SIGNATURES)
+"""
 function urncomparisontrait(::Type{CiteCatalogEntry})
     CatEntryComparable()
 end
 
-function urnequals(doc1::CiteCatalogEntry, doc2::CiteCatalogEntry)
-    doc1.urn == doc2.urn
+function urnequals(u::Cite2Urn, catentry::CiteCatalogEntry)
+    u == catentry.urn
 end
-function urncontains(doc1::CiteCatalogEntry, doc2::CiteCatalogEntry)
-    urncontains(doc1.urn, doc2.urn)
+function urncontains(u::Cite2Urn, catentry::CiteCatalogEntry)
+    urncontains(u, catentry.urn)
 end
-function urnsimilar(doc1::CiteCatalogEntry, doc2::CiteCatalogEntry)
-    urnsimilar(doc1.urn, doc2.urn)
+function urnsimilar(u::Cite2Urn, catentry::CiteCatalogEntry)
+    urnsimilar(u, catentry.urn)
 end
 
+"""Define singleton type for `CexTrait` value."""
 struct CatEntryCex <: CexTrait end
+"""Assign value of `CexTrait` for `CiteCatalogEntry`.
+$(SIGNATURES)
+"""
 function cextrait(::Type{CiteCatalogEntry})
     CatEntryCex()
 end
 
-
 """Serialize a `CiteCatalogEntry` to delimited-text format.
 $(SIGNATURES)
 """
-function cex(doc::CiteCatalogEntry; delimiter = "|")
-    columns = [doc.urn, doc.label, doc.labelling_property]
-    isnothing(ordering_property) ? push!(columns, "") : push!(columns, doc.ordering_property)
-    push!(columns, doc.license)
+function cex(catentry::CiteCatalogEntry; delimiter = "|")
+    columns = [catentry.urn, catentry.label, catentry.labelling_property]
+    isnothing(catentry.ordering_property) ? push!(columns, "") : push!(columns, catentry.ordering_property)
+    push!(columns, catentry.license)
     join(columns, delimiter)
 end
-
-
 
 """Instantiate a `CiteCatalogEntry` from CEX source.
 $(SIGNATURES)
