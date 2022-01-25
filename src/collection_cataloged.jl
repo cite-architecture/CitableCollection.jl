@@ -70,16 +70,27 @@ function urncomparisontrait(::Type{CatalogedCollection})
     CatalogedCollectionComparable()
 end
 
-function urnequals(urn::Cite2Urn, coll::CatalogedCollection)
-    filter(item -> urnequals(item.urn, urn), coll.data)
+
+"""Filter records from collection data matching `urn` for equality.
+$(SIGNATURES)
+"""
+function urnequals(u::Cite2Urn, coll::CatalogedCollection)
+    filter(item -> urnequals(u, item.urn), coll.data)
 end
 
-function urncontains(urn::Cite2Urn,  coll::CatalogedCollection)
-    filter(item -> urncontains(item.urn, urn), coll.data)
+"""Filter records from collection data matching `urn` for containment.
+$(SIGNATURES)
+"""
+function urncontains(u::Cite2Urn,  coll::CatalogedCollection)
+    filter(item -> urncontains(u, item.urn), coll.data)
 end
 
-function urnsimilar(urn::Cite2Urn,  coll::CatalogedCollection)
-    filter(item -> urnsimilar(item.urn, urn), coll.data)
+
+"""Filter records from collection data matching `urn` for similarity.
+$(SIGNATURES)
+"""
+function urnsimilar(u::Cite2Urn,  coll::CatalogedCollection)
+    filter(item -> urnsimilar(u, item.urn), coll.data)
 end
 
 

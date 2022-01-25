@@ -8,7 +8,10 @@
 
     @test citablecollection(cc)
     @test urncomparable(cc)
-
+    collurn = dropversion(urn(cc))
+    @test urnequals(collurn, cc) |> isempty
+    @test length(urncontains(collurn, cc)) == 2
+    @test length(urnsimilar(collurn, cc)) == 2
 
 
 end
