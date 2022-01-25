@@ -1,3 +1,32 @@
+@testset "Test conversion of types to CITE type labels" begin
+    pairs = [
+        (Cite2Urn, "cite2urn"),
+        (CtsUrn, "ctsurn"),
+        (Bool, "boolean"),
+        (Int64, "number"),
+        (String, "string")
+    ]
+    for pr in pairs
+        @test CitableCollection.cpropfortype(pr[1]) == pr[2]
+    end
+end
+
+@testset "Text conversion of CITE type labels to Julia types" begin
+    @test_throws DomainError CitableCollection.typeforcprop("phony")
+
+    pairs = [
+        (Cite2Urn, "Cite2Urn"),
+        (CtsUrn, "CtsUrn"),
+        (Bool, "Boolean"),
+        (Number, "number"),
+        (AbstractString, "string")
+    ]
+    for pr in pairs
+        @test CitableCollection.typeforcprop(pr[2]) == pr[1]
+    end
+end
+
+
 @testset "Test utilities for PropertyDefinition" begin
     f = joinpath(pwd(), "data", "collectionexample.cex")
     cexsrc = read(f, String)

@@ -11,7 +11,14 @@ end
 """True if either of two property types is a subtype of the other.
 """
 function comparablehierarchy(pd1::PropertyDefinition, pd2::PropertyDefinition)
-    pd1.property_type <: pd2.property_type || pd2.property_type <: pd1.property_type
+    if Base.isconcretetype(pd1.property_type) && Base.isconcretetype(pd2.property_type)
+        super1 = supertype(pd1.property_type)
+        super2 = supertype(pd2.property_type)
+        super1 <: super2 || super2 <: super1
+    else 
+        # if either is concrete, directly compare them:
+        pd1.property_type <: pd2.property_type || pd2.property_type <: pd1.property_type
+    end
 end
 
 """Define equality of `PropertyDefinition`s to allow

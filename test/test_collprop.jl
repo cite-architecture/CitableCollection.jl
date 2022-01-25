@@ -1,31 +1,3 @@
-@testset "Test conversion of types to CITE type labels" begin
-    pairs = [
-        (Cite2Urn, "cite2urn"),
-        (CtsUrn, "ctsurn"),
-        (Bool, "boolean"),
-        (Int64, "number"),
-        (String, "string")
-    ]
-    for pr in pairs
-        @test CitableCollection.cpropfortype(pr[1]) == pr[2]
-    end
-end
-
-@testset "Text conversion of CITE type labels to Julia types" begin
-    @test_throws DomainError CitableCollection.typeforcprop("phony")
-
-    pairs = [
-        (Cite2Urn, "Cite2Urn"),
-        (CtsUrn, "CtsUrn"),
-        (Bool, "Boolean"),
-        (Number, "number"),
-        (AbstractString, "string")
-    ]
-    for pr in pairs
-        @test CitableCollection.typeforcprop(pr[2]) == pr[1]
-    end
-end
-
 @testset "Test citable trait of CollectionProperty" begin
     urnprop = PropertyDefinition(
         Cite2Urn("urn:cite2:hmt:vaimg.v1.urn:"),
@@ -49,7 +21,6 @@ end
     @test length(authlist(rightsprop)) == 2
 end
 
-
 @testset "Test URN comparable trait of CollectionProperty" begin
     uprop = PropertyDefinition(
         Cite2Urn("urn:cite2:hmt:vaimg.v1.urn:"),
@@ -71,7 +42,6 @@ end
 
 end
 
-
 @testset "Test CEX trait of CollectionProperty" begin
     rightsprop = PropertyDefinition(
         Cite2Urn("urn:cite2:hmt:vaimg.v1.rights:"),
@@ -84,4 +54,30 @@ end
 
 
     @test fromcex(expectedcex, PropertyDefinition) == rightsprop
+end
+
+@test "Test comparison of type hierarchies of a `PropertyDefinition`" begin
+
+comparablehierarchy(pd1::PropertyDefinition, pd2::PropertyDefinition)
+    labelprop = PropertyDefinition(
+        Cite2Urn("urn:cite2:citedemo:testprops.v1.label:"),
+        "Label",
+        String,
+        []
+    )
+    substrprop = PropertyDefinition(
+        Cite2Urn("urn:cite2:citedemo:testprops.v1.substringdata:"),
+        "Data created by function yielding a substring",
+        SubString{String} ,
+        []
+    )
+
+    countprop = PropertyDefinition(
+        Cite2Urn("urn:cite2:citedemo:testprops.v1.count:"),
+        "Integer from counting something",
+        Int64,
+        []
+    )
+    @test CiteCollection.comparablehierarchy(labelprop, substrprop)
+    @test CiteCollection.comparablehierarchy(labelprop, countprop) == false
 end

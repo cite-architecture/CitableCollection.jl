@@ -2,10 +2,10 @@
 
 ## Overview
 
-Collections of citable objects are generic tabular data structures with a schema that meet two specific requirements of the CITE architecture:
+Collections of citable objects are generic tabular data structures with a schema.  They  meet two specific requirements of the CITE architecture:
 
 1. they can be filtered using URN logic
-2. they can be serialized delimited text following the CEX format
+2. they support serialization to and instantiation from delimited text following the CEX format
 
 ## TL;DR
 
@@ -13,7 +13,7 @@ Collections of citable objects are generic tabular data structures with a schema
 root = pwd() |> dirname |> dirname
 ```
 
-Read sample data file in `test/data` directory.
+Read a one-item list of  cataloged collections from a sample data file in this repository's `test/data` directory.
 
 ```@example eg
 using CitableBase, CitableCollection

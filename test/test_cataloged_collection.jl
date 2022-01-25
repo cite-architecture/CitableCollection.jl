@@ -1,5 +1,5 @@
 @testset "Test definition of a `CatalogedCollection" begin
-    f = joinpath(pwd(), "test", "collectionexample.cex")
+    f = joinpath(pwd(), "data", "collectionexample.cex")
     colls = fromcex(f, CatalogedCollection, FileReader)
 end
 

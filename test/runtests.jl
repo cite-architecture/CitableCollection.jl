@@ -10,8 +10,9 @@ include("test_collprop.jl")
 include("test_utils.jl")
 include("test_rawcollections.jl")
 include("test_catentry.jl")
-include("test_cataloged_collection.jl")
 include("test_catalog.jl")
+include("test_cataloged_collection.jl")
+
 
 #=
 Add tests for:
