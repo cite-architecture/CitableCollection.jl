@@ -5,6 +5,9 @@ struct CiteCollectionCatalog
     entries::Vector{CiteCatalogEntry}
 end
 
+"""Override `Base.show` for `CiteCollectionCatalog`.
+$(SIGNATURES)
+"""
 function show(io::IO, catalog::CiteCollectionCatalog)
     if catalog.entries == 1
         print(io, "Catalog  of ", length(catalog.entries), " citable collection")
@@ -13,10 +16,12 @@ function show(io::IO, catalog::CiteCollectionCatalog)
     end
 end
 
-
+"""Singleton type for value of `CitableCollectionTrait`."""
 struct CitableCollectionCatalog <: CitableCollectionTrait end
-
-function citablecollectiontrait(::Type{CiteCatalogEntry})
+"""Define value of `CitableCollectionTrait` for `CiteCollectionCatalog`.
+$(SIGNATURES)
+"""
+function citablecollectiontrait(::Type{CiteCollectionCatalog})
     CitableCollectionCatalog()
 end
 

@@ -28,6 +28,8 @@ import CitableBase: cextrait
 import CitableBase: cex
 import CitableBase: fromcex
 
+import CitableBase: citablecollectiontrait
+
 import Tables: istable
 import Tables: columns
 import Tables: rows
