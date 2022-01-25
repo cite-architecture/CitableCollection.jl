@@ -41,8 +41,6 @@ end
     collurn = Cite2Urn("urn:cite2:hmt:vaimg.v1:")
     expected =  ["urn","caption", "rights"]
     @test CitableCollection.propertyids(props, collurn) == expected
-
-
 end
 
 
@@ -59,3 +57,7 @@ end
 end
 
 
+@testset "Test converting column types in strictly parsed CEX" begin
+    # converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
+
+end

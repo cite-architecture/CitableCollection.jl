@@ -17,8 +17,6 @@ include("test_cataloged_collection.jl")
 #=
 Add tests for:
 
-comparablehierarchy
-
 converttypes
 columnnamesok
 

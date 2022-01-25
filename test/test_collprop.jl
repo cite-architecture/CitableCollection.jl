@@ -52,13 +52,10 @@ end
     expectedcex = "urn:cite2:hmt:vaimg.v1.rights:|License for binary image data|string|CC-attribution-share-alike,public domain"
     @test cex(rightsprop) == expectedcex
 
-
     @test fromcex(expectedcex, PropertyDefinition) == rightsprop
 end
 
-@test "Test comparison of type hierarchies of a `PropertyDefinition`" begin
-
-comparablehierarchy(pd1::PropertyDefinition, pd2::PropertyDefinition)
+@testset "Test comparison of type hierarchies of a `PropertyDefinition`" begin
     labelprop = PropertyDefinition(
         Cite2Urn("urn:cite2:citedemo:testprops.v1.label:"),
         "Label",
@@ -71,13 +68,12 @@ comparablehierarchy(pd1::PropertyDefinition, pd2::PropertyDefinition)
         SubString{String} ,
         []
     )
-
     countprop = PropertyDefinition(
         Cite2Urn("urn:cite2:citedemo:testprops.v1.count:"),
         "Integer from counting something",
         Int64,
         []
     )
-    @test CiteCollection.comparablehierarchy(labelprop, substrprop)
-    @test CiteCollection.comparablehierarchy(labelprop, countprop) == false
+    @test CitableCollection.comparablehierarchy(labelprop, substrprop)
+    @test CitableCollection.comparablehierarchy(labelprop, countprop) == false
 end
