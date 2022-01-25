@@ -19,8 +19,13 @@
     derived = fromcex(cexout, CatalogedCollection)
     @test [cc] == derived
 
+    @test Tables.istable(cc)
+    @test length(cc) == 2
+    @test eltype(cc) <: NamedTuple
+    @test Tables.rows(cc) |> typeof <: TypedTables.Table
+    @test Tables.columns(cc) |> typeof <: TypedTables.Table
+
+    @test collect(cc) |> typeof <: Vector
+    @test filter(r -> contains(r.caption, "verso"), cc) |> length == 1
+
 end
-
-# Traits to test:
-
-    # 5 cite traits
