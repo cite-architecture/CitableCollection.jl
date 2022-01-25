@@ -15,7 +15,8 @@
     @test cexserializable(catalog)
     cexout = cex(catalog)
     derived = fromcex(cexout, CiteCollectionCatalog)
-    #@test derived == catalog
+    @test derived == catalog
 
     # 5 table functions
+    
 end

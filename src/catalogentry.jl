@@ -14,6 +14,16 @@ function show(io::IO, doc::CiteCatalogEntry)
     print(io, doc.label)
 end
 
+"""Override `Base.==` for `CiteCatalogEntry`.
+$(SIGNATURES)
+"""
+function ==(cat1::CiteCatalogEntry, cat2::CiteCatalogEntry)
+    cat1.urn == cat2.urn && cat1.label == cat2.label &&
+    cat1.labelling_property == cat2.labelling_property &&
+    cat1.ordering_property == cat2.ordering_property &&
+    cat1.license == cat2.license
+end
+
 
 """True if a value is defined for `ordering_property`.
 $(SIGNATURES)

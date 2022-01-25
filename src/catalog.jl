@@ -16,6 +16,15 @@ function show(io::IO, catalog::CiteCollectionCatalog)
     end
 end
 
+
+"""Override `Base.==` for `CiteCollectionCatalog`.
+$(SIGNATURES)
+"""
+function ==(cat1::CiteCollectionCatalog, cat2::CiteCollectionCatalog)
+    all(cat1.entries .== cat2.entries)
+end
+
+
 """Singleton type for value of `CitableCollectionTrait`."""
 struct CitableCollectionCatalog <: CitableCollectionTrait end
 """Define value of `CitableCollectionTrait` for `CiteCollectionCatalog`.
@@ -76,7 +85,9 @@ end
 $(SIGNATURES).
 """
 function cex(catalog::CiteCollectionCatalog; delimiter = "|")
-    header = "#!citecollections\n"
+
+    #URN#Description#Labelling property#Ordering property#License
+    header = "#!citecollections\n" * join(["URN", "Description", "Labelling property", "Ordering property", "License"], delimiter) * "\n"
     strings = map(entry -> cex(entry, delimiter=delimiter), catalog.entries)
     header * join(strings, "\n")
 end
