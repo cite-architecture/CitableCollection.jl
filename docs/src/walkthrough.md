@@ -5,6 +5,9 @@ root = pwd() |> dirname |> dirname
 ```
 
 ## Reading cataloged collections from a CEX source
+
+The `fromcex` function from `CitableBase` returns a Vector of zero or more `CatalogedCollection`s.
+
 ```@example walk
 f = joinpath(root, "test", "data", "hmtextract.cex")
 using CitableBase, CitableCollection

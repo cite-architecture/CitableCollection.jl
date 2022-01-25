@@ -1,14 +1,22 @@
 @testset "Test definition of a `CatalogedCollection" begin
     f = joinpath(pwd(), "data", "collectionexample.cex")
-    colls = fromcex(f, CatalogedCollection, FileReader)
+    cc = fromcex(f, CatalogedCollection, FileReader)[1]
+    @test citable(cc)
+    @test urn(cc) == Cite2Urn("urn:cite2:hmt:vaimg.v1:")
+    @test label(cc) == "Images of the Venetus A manuscript"
+    @test urntype(cc) == Cite2Urn
+
+    @test citablecollection(cc)
+    @test urncomparable(cc)
+
+
+
 end
 
 # Traits to test:
 #
-    # citable
     # urncomparison
     # cex
     # Also, should implement colleciton on data:
     #
-    # urncomparison
     # 5 cite traits

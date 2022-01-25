@@ -7,7 +7,9 @@ struct CatalogedCollection
     data::RawDataCollection
 end
 
-
+"""Override `Base.show` for `CatalogedCollection`.
+$(SIGNATURES)
+"""
 function show(io::IO, coll::CatalogedCollection)
     if coll.data == 1
         print(io, coll.catalogentry.label, "\nA cataloged collection containing ", length(coll.data), " citable object")
@@ -16,17 +18,54 @@ function show(io::IO, coll::CatalogedCollection)
     end
 end
 
-
-struct CitableCatalogedCollection <: CitableCollectionTrait end
-function citablecollectiontrait(::Type{CatalogedCollection})
+"Singleton type to use as value of `CitableTrait`."
+struct CitableCatalogedCollection <: CitableTrait end
+"""Set value of `CitableTrait` for `CatalogedCollection`.
+$(SIGNATURES)
+"""
+function citabletrait(::Type{CatalogedCollection})
     CitableCatalogedCollection()
 end
 
-function urntype(catalog::CatalogedCollection)
+
+"""Find URN for cataloged collection.
+$(SIGNATURES)
+"""
+function urn(cc::CatalogedCollection)
+    urn(cc.catalogentry)
+end
+
+
+"""Find URN type for cataloged collection.
+$(SIGNATURES)
+"""
+function urntype(cc::CatalogedCollection)
     Cite2Urn
 end
 
+"""Find label for cataloged collection.
+$(SIGNATURES)
+"""
+function label(cc::CatalogedCollection)
+    label(cc.catalogentry)
+end
+
+
+"Singleton type for value of `CitableCollectionTrait"
+struct CollectionTraitCatalogedCitable <: CitableCollectionTrait end
+"""Set value of `CitableCollectionTrait` for `CatalogedCollection`.
+$(SIGNATURES)
+"""
+function citablecollectiontrait(::Type{CatalogedCollection})
+    CollectionTraitCatalogedCitable()
+end
+
+
+"Singleton type for value of `UrnComparisonTrait"
 struct CatalogedCollectionComparable <: UrnComparisonTrait end
+"""Set value of `UrnComparisonTrait` for `CatalogedCollection`.
+$(SIGNATURES)
+"""
 function urncomparisontrait(::Type{CatalogedCollection})
     CatalogedCollectionComparable()
 end
