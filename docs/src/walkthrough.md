@@ -6,15 +6,23 @@ root = pwd() |> dirname |> dirname
 
 ## Reading cataloged collections from a CEX source
 ```@example walk
-f = joinpath(root, "test", "data", "hmtextract.cex")
+f = joinpath(root, "test", "data", "hmtextract.cex", delimiter = "#")
 cclist = fromcex(f, CatalogedCollection, FileReader)
 ```
 
 ## Reading a raw data collection
 
 - strict parsing of CEX
+
+```@example walk
+rawlist = fromcex(f, RawDataCollection, FileReader, delimter = "#")
+```
+
 - lazy parsing of CEX
 
+```@example walk
+lazylist = fromcex(f, RawDataCollection, FileReader, delimter = "#", strict = false)
+``` 
 
 ## Querying collections
 
