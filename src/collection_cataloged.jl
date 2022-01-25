@@ -18,6 +18,11 @@ function show(io::IO, coll::CatalogedCollection)
     end
 end
 
+function ==(cc1::CatalogedCollection, cc2::CatalogedCollection)
+    cc1.catalogentry == cc2.catalogentry &&
+    cc1.data == cc2.data
+end
+
 "Singleton type to use as value of `CitableTrait`."
 struct CitableCatalogedCollection <: CitableTrait end
 """Set value of `CitableTrait` for `CatalogedCollection`.
@@ -93,14 +98,22 @@ function urnsimilar(u::Cite2Urn,  coll::CatalogedCollection)
     filter(item -> urnsimilar(u, item.urn), coll.data)
 end
 
-
+"Singleton type for value of `CexTrait`."
 struct CatalogedCollectionCex <: CexTrait end
+"""Set value of `CexTrait` for `CatalogedCollection`.
+$(SIGNATURES)
+"""
 function cextrait(::Type{CatalogedCollection})
     CatalogedCollectionCex()
 end
 
 
+"""Compose CEX representation of a `CatalogedCollection` including
+`citecollections`, `citeproperties` and `citedata` blocks.
+$(SIGNATURES)
+"""
 function cex(coll::CatalogedCollection; delimiter = "|")
+    @debug("HEY!")
     # COMPOSE citecollections block
     ccollines = ["#!citecollections",
     join(["URN", "Description","Labelling property",
@@ -120,12 +133,14 @@ function cex(coll::CatalogedCollection; delimiter = "|")
             ], delimiter
         )
     )
-    
-    join(ccollines, "\n") * cex(rawdatacollection(coll.data))
+    join(ccollines,"\n") * "\n\n" * cex(coll.data)
 end
 
 
-# returns a list
+"""Compose `CatalogedCollection`s from a CEX source.
+$(SIGNATURES)
+Returns a Vector of zero or more `CatalogedCollection`s.
+"""
 function fromcex(trait::CatalogedCollectionCex, cexsrc::AbstractString, T;
     delimiter = "|", configuration = nothing, strict = true)
 

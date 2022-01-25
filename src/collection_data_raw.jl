@@ -145,7 +145,7 @@ $(SIGNATURES)
 function cex(rdc::RawDataCollection; delimiter = "|")
     # Do a cite properties section
     proplines = ["#!citeproperties",
-        "Property|Label|Type|Authority list"
+        join(["Property", "Label", "Type", "Authority list"], delimiter)
     ]
     for p in rdc.propertydefinitions
         push!(proplines, cex(p))
@@ -164,6 +164,7 @@ function cex(rdc::RawDataCollection; delimiter = "|")
         end
         push!(datalines, join(rowdata, delimiter))
     end
+    @debug("Generating cex for rawdatacollection with property block", join(proplines, "\n"))
     join(proplines, "\n") * "\n\n" *  join(datalines, "\n")
 end
 

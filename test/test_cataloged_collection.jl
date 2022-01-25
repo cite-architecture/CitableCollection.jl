@@ -14,12 +14,13 @@
     @test length(urnsimilar(collurn, cc)) == 2
 
 
+    @test cexserializable(cc)
+    cexout = cex(cc)
+    derived = fromcex(cexout, CatalogedCollection)
+    @test [cc] == derived
+
 end
 
 # Traits to test:
-#
-    # urncomparison
-    # cex
-    # Also, should implement colleciton on data:
-    #
+
     # 5 cite traits
