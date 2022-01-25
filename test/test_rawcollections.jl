@@ -28,3 +28,10 @@ end
     # schema
     # filter
 end
+
+@testset "Test URN filtering on `RawDataCollection" begin
+# urnequals
+# urncontains
+# urnsimilar
+
+end
