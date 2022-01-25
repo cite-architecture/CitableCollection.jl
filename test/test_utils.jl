@@ -83,7 +83,7 @@ end
     strictly = CitableCollection.strictread(cexsrc, "#")[2]
     lazily = CitableCollection.lazyread(cexsrc, "#")[2]
     @test Tables.schema(strictly).names == Tables.schema(lazily).names
-    @test Tables.schema(strictly).types != Tables.schema(lazily).typeassert
+    @test Tables.schema(strictly).types != Tables.schema(lazily).types
     @test Tables.schema(lazily).types[2] == String
     @test Tables.schema(strictly).types[2] == CitableObject.Cite2Urn
 
