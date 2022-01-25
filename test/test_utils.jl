@@ -85,5 +85,5 @@ end
     propslist = CitableCollection.propertiesfromcex(cexsrc, "#") 
     rdcprops = filter(prop -> urncontains(urn(rdc), urn(prop)), propslist)
     @test CitableCollection.columnnamesok([rdc], rdcprops)
-    @test CitableCollection.columnnamesok([rdc], propslist[2:end]) == false
+    @test CitableCollection.columnnamesok([rdc], rdcprops[2:end]) == false
 end

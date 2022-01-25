@@ -13,6 +13,8 @@ RawDataCollection
 ## Internal functions
 
 ```@docs
+CitableCollection.lazyread
+CitableCollection.strictread
 CitableCollection.collectionsfromprops
 CitableCollection.propertyids
 CitableCollection.propertynames

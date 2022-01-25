@@ -71,6 +71,7 @@ function columnnamesok(rdclist::Vector{RawDataCollection}, propertieslist::Vecto
     for rdc in rdclist
         set1 = CitableCollection.propertyids(propertieslist, urn(rdc))  |> Set 
         set2 = Tables.columnnames(rdc.data) .|> string  |> Set
+        @debug(">Compare ", set1, set2)
         if set1 != set2
             @warn("Column names in table did not match configured values for collection $(urn(rdc)): $(set1) != $(set2)")
             return false
