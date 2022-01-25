@@ -2,11 +2,12 @@
 
 ## Exported structures and functions
 
-```@docs
 PropertyDefinition
+RawDataCollection
+
+```@docs
 citetype
 authlist
-RawDataCollection
 ```
 
 

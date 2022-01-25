@@ -1,6 +1,4 @@
-"""A collection of citable data.
-$(SIGNATURES)
-"""
+"""A collection of citable data."""
 struct RawDataCollection
     data::TypedTables.Table
     label::AbstractString

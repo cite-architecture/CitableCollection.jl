@@ -1,6 +1,5 @@
 
-"""Configuration data for a single property in a collection.
-"""
+"""Configuration data for a single property in a collection."""
 struct PropertyDefinition <: Citable
     property_urn
     property_label

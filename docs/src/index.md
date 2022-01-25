@@ -13,10 +13,10 @@ Collections of citable objects are generic tabular data structures with a schema
 root = pwd() |> dirname |> dirname
 ```
 
-Read a one-item list of  cataloged collections from a sample data file in this repository's `test/data` directory.
+Read a brief CEX sample with data in two cataloged collections from a sample data file in this repository's `test/data` directory.
 
 ```@example eg
 using CitableBase, CitableCollection
-f = joinpath(root, "test", "data", "collectionexample.cex")
-catalogedcollections = fromcex(f, CatalogedCollection, FileReader)
+f = joinpath(root, "test", "data", "hmtextract.cex")
+catalogedcollections = fromcex(f, CatalogedCollection, FileReader, delimiter = "#")
 ```

@@ -6,8 +6,9 @@ root = pwd() |> dirname |> dirname
 
 ## Reading cataloged collections from a CEX source
 ```@example walk
-f = joinpath(root, "test", "data", "hmtextract.cex", delimiter = "#")
-cclist = fromcex(f, CatalogedCollection, FileReader)
+f = joinpath(root, "test", "data", "hmtextract.cex")
+using CitableBase, CitableCollection
+cclist = fromcex(f, CatalogedCollection, FileReader, delimiter = "#")
 ```
 
 ## Reading a raw data collection
@@ -15,13 +16,13 @@ cclist = fromcex(f, CatalogedCollection, FileReader)
 - strict parsing of CEX
 
 ```@example walk
-rawlist = fromcex(f, RawDataCollection, FileReader, delimter = "#")
+rawlist = fromcex(f, RawDataCollection, FileReader, delimiter = "#")
 ```
 
 - lazy parsing of CEX
 
 ```@example walk
-lazylist = fromcex(f, RawDataCollection, FileReader, delimter = "#", strict = false)
+lazylist = fromcex(f, RawDataCollection, FileReader, delimiter = "#", strict = false)
 ``` 
 
 ## Querying collections
@@ -41,16 +42,16 @@ idproperty = PropertyDefinition(
     []
 )
 ```    
-```@example schema
+```@example walk
 urn(idproperty) 
 ```
-```@example schema
+```@example walk
 label(idproperty)
 ```
-```@example schema
+```@example walk
 citetype(idproperty)
 ```
 For string values, it includes an optional authority list. 
-```@example schema
+```@example walk
 authlist(idproperty)
 ```
