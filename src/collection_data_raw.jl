@@ -219,3 +219,19 @@ function lazyread(cexsrc::AbstractString, delimiter = "|")
     end
     datacollections .|> rawdatacollection
 end
+
+
+
+"""Define initial iteration of a `RawDataCollection`.
+#(SIGNATURES)
+"""
+function iterate(rdc::RawDataCollection)
+    isempty(rdc.data) ? nothing : (rdc.data[1], 2)
+end
+
+"""Define iteration with state of a `RawDataCollection`.
+#(SIGNATURES)
+"""
+function iterate(rdc::RawDataCollection, state)
+    state > length(rdc.data) ? nothing : (rdc.data[state], state + 1)
+end

@@ -9,6 +9,10 @@ import Base: ==
 import Base: show
 import Base: length
 
+import Base: iterate
+import Base: length
+import Base: eltype
+
 import CitableBase: citabletrait
 import CitableBase: urntype
 import CitableBase: urn
@@ -27,9 +31,6 @@ import Tables: istable
 import Tables: columns
 import Tables: rows
 import Tables: schema
-import Tables: eltype
-
-
 
 include("collection_properties.jl")
 include("collection_data_raw.jl")

@@ -21,11 +21,15 @@ end
 end
 
 @testset "Test table properties and five key functions of `RawDataCollection" begin
+    f = joinpath(pwd(), "data", "hmtextract.cex")
+    rdc = fromcex(f, RawDataCollection, FileReader, delimiter = "#")[2]
+    @test eltype(rdc) <: NamedTuple
+    @test urn(rdc) == Cite2Urn("urn:cite2:hmt:e3pages.v1:")
+    @test label(rdc) == "Citable collection of 5 items with schema specified from `citeproperties` settings."
+    @test Tables.schema(rdc).names == (:sequence, :image, :urn, :rv, :label)
+    @test length(rdc) == 5
     #
     # iterable
-    # eltype
-    # length
-    # schema
     # filter
 end
 
