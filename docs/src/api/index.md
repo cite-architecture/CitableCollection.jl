@@ -13,10 +13,10 @@ RawDataCollection
 ## Internal functions
 
 ```@docs
-collectionsfromprops
-propertyids
-propertynames
-typeforcprop
-cpropfortype
-converttypes
+CitableCollection.collectionsfromprops
+CitableCollection.propertyids
+CitableCollection.propertynames
+CitableCollection.typeforcprop
+CitableCollection.cpropfortype
+CitableCollection.converttypes
 ```
