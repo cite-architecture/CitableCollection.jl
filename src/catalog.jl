@@ -85,8 +85,6 @@ end
 $(SIGNATURES).
 """
 function cex(catalog::CiteCollectionCatalog; delimiter = "|")
-
-    #URN#Description#Labelling property#Ordering property#License
     header = "#!citecollections\n" * join(["URN", "Description", "Labelling property", "Ordering property", "License"], delimiter) * "\n"
     strings = map(entry -> cex(entry, delimiter=delimiter), catalog.entries)
     header * join(strings, "\n")
@@ -106,3 +104,68 @@ function fromcex(trait::CatalogCex, cexsrc::AbstractString, T;
     end
     CiteCollectionCatalog(entries)
 end
+
+
+
+"""Implement `istable` for `RawDataCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
+function istable(catalog::CiteCollectionCatalog)
+    true
+end
+
+
+"""Implement `columns` for `RawDataCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
+function columns(catalog::CiteCollectionCatalog)
+    columns(catalog.entries)
+end
+
+
+"""Implement `rows` for `RawDataCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
+function rows(catalog::CiteCollectionCatalog)
+    rows(catalog.entries)
+end
+
+
+"""Implement `length` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function length(catalog::CiteCollectionCatalog)
+    length(catalog.entries)
+end
+
+"""Implement `eltype` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function eltype(catalog::CiteCollectionCatalog)
+    eltype(catalog.entries)
+end
+
+"""Define initial iteration of a `RawDataCollection`.
+#(SIGNATURES)
+"""
+function iterate(catalog::CiteCollectionCatalog)
+    isempty(catalog.entries) ? nothing : (catalog.entries[1], 2)
+end
+
+"""Define iteration with state of a `RawDataCollection`.
+#(SIGNATURES)
+"""
+function iterate(catalog::CiteCollectionCatalog, state)
+    state > length(catalog.entries) ? nothing : (catalog.entries[state], state + 1)
+end
+
+"""Implement filtering for `RawDataCollection`
+$(SIGNATURES)
+"""
+function filter(f, catalog::CiteCollectionCatalog)
+     Iterators.filter(f, catalog.entries) |> collect
+end
+

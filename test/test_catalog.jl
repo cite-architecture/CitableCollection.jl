@@ -18,5 +18,9 @@
     @test derived == catalog
 
     # 5 table functions
-    
+    @test Tables.istable(catalog)
+    @test eltype(catalog) == CiteCatalogEntry
+    @test length(catalog) == 2
+    @test typeof(collect(catalog)) ==  Vector{CiteCatalogEntry}
+    @test length(filter(r -> contains(r.label, "Escorial"), catalog)) == 1
 end
