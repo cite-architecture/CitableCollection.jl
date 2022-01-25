@@ -77,6 +77,20 @@ end
 
 end
 
+@testset "Test collection reader utilities" begin
+    f = joinpath(pwd(), "data", "hmtextract.cex")
+    cexsrc = read(f, String)
+    strictly = CitableCollection.strictread(cexsrc, "#")[2]
+    lazily = CitableCollection.lazyread(cexsrc, "#")[1]
+    @test Tables.schema(strictly).names == Tables.schema(lazily).names
+    @test Tables.schema(strictly).types != Tables.schema(lazily).typeassert
+    @test Tables.schema(lazily).types[2] == String
+    @test Tables.schema(strictly).types[2] == CitableObject.Cite2Urn
+
+
+end
+
+
 
 @testset "Test comparison of column names in schemata and property lists" begin
     f = joinpath(pwd(), "data", "hmtextract.cex")

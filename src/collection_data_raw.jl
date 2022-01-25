@@ -179,7 +179,7 @@ function fromcex(traitvalue::RawDataCollectionCex, cexsrc::AbstractString, T;
         strictread(cexsrc,  delimiter)
     else
         @warn("Reading CEX data lazily")
-        lazyread(cexsrc,delimiter) 
+        lazyread(cexsrc, delimiter) 
     end
 end
 
