@@ -12,6 +12,7 @@ import Base: length
 import Base: iterate
 import Base: length
 import Base: eltype
+import Base: filter
 
 import CitableBase: citabletrait
 import CitableBase: urntype

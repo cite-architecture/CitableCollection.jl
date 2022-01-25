@@ -28,8 +28,7 @@ end
     @test label(rdc) == "Citable collection of 5 items with schema specified from `citeproperties` settings."
     @test Tables.schema(rdc).names == (:sequence, :image, :urn, :rv, :label)
     @test length(rdc) == 5
-    #
-    # iterable
+    @test typeof(collect(rdc))  <: Vector
     # filter
 end
 
@@ -37,5 +36,11 @@ end
 # urnequals
 # urncontains
 # urnsimilar
+    f = joinpath(pwd(), "data", "hmtextract.cex")
+    rdc = fromcex(f, RawDataCollection, FileReader, delimiter = "#")[2]
+    collurn =  Cite2Urn("urn:cite2:hmt:e3pages:")
+    @test isempty(urnequals(collurn, rdc))
+    @test length(urncontains(collurn, rdc)) == 5
+    @test length(urnsimilar(collurn, rdc)) == 5
 
 end

@@ -1,4 +1,8 @@
-"""A collection of citable data."""
+"""A collection of citable data.
+
+The collection is itself a citable object.  In addition,
+it contains a table of citable objects represented as a `TypedTables.Table`.
+"""
 struct RawDataCollection
     data::TypedTables.Table
     label::AbstractString
@@ -135,7 +139,9 @@ function cextrait(::Type{RawDataCollection})
     RawDataCollectionCex()
 end
 
-
+"""Compose delimited text representation of `rdc`.
+$(SIGNATURES)
+"""
 function cex(rdc::RawDataCollection; delimiter = "|")
     # Do a cite properties section
     proplines = ["#!citeproperties",
@@ -182,7 +188,6 @@ function fromcex(traitvalue::RawDataCollectionCex, cexsrc::AbstractString, T;
 end
 
 
-
 """Given a `Table` with a column named `urn` containing
 string values, create a new table with the same data but with
 the `urn` column converted to `Cite2Urn` values.
@@ -220,8 +225,6 @@ function lazyread(cexsrc::AbstractString, delimiter = "|")
     datacollections .|> rawdatacollection
 end
 
-
-
 """Define initial iteration of a `RawDataCollection`.
 #(SIGNATURES)
 """
@@ -234,4 +237,44 @@ end
 """
 function iterate(rdc::RawDataCollection, state)
     state > length(rdc.data) ? nothing : (rdc.data[state], state + 1)
+end
+
+"""Implement filtering for `RawDataCollection`
+$(SIGNATURES)
+"""
+function filter(f, rdc::RawDataCollection)
+     Iterators.filter(f, rdc.data) |> collect
+end
+
+
+"""Singleton type for value of `UrnComparisonTrait`.
+$(SIGNATURES)
+"""
+struct RawDataCollectionComparable <: UrnComparisonTrait end
+"""Assign value of `UrnComparisonTrait` for `RawDataCollection`
+$(SIGNATURES)
+"""
+function urncomparisontrait(::Type{RawDataCollection})
+    RawDataCollectionComparable()
+end
+
+"""Filter `rdc` by `urn` based on URN equality. 
+$(SIGNATURES)
+"""
+function urnequals(urn::Cite2Urn, rdc::RawDataCollection, )
+    filter(item -> urnequals(item.urn, urn), rdc.data)
+end
+
+"""Filter `rdc` by `urn` based on URN containment.
+$(SIGNATURES)
+"""
+function urncontains(urn::Cite2Urn, rdc::RawDataCollection)
+    filter(r -> urncontains(urn, r.urn),  rdc.data)
+end
+
+"""Filter `rdc` by `urn` based on URN similarity.
+$(SIGNATURES)
+"""
+function urnsimilar(urn::Cite2Urn, rdc::RawDataCollection)
+    filter(item -> urnsimilar(item.urn, urn), rdc)
 end

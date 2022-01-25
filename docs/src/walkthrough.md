@@ -27,6 +27,11 @@ lazylist = fromcex(f, RawDataCollection, FileReader, delimiter = "#", strict = f
 
 ## Querying collections
 
+Examine the schema:
+```@example walk
+
+```
+Select the recto pages only:
 
 
 ## Schemas and catalog metadata
