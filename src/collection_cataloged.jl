@@ -4,7 +4,7 @@ $(SIGNATURES)
 """
 struct CatalogedCollection
     catalogentry::CiteCatalogEntry
-    data::TypedTables.Table
+    data::RawDataCollection
 end
 
 
@@ -91,9 +91,9 @@ function fromcex(trait::CatalogedCollectionCex, cexsrc::AbstractString, T;
         elseif isempty(entries)
             throw(DomainError(urn(c)), "No catalog entry for collection $(urn(c))")
         end
-        push!(results, CatalogedCollection(entries[1], c.data))
+        push!(results, CatalogedCollection(entries[1], c))
     end
-    @warn("Found ", length(results), " collections")
+    @debug("Found ", length(results), " collections")
     results
 
 end

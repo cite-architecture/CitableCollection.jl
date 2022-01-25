@@ -19,3 +19,12 @@ end
     strictlist =  fromcex(f, RawDataCollection, FileReader, delimiter = "#")
     @test length(lazylist) == length(strictlist)
 end
+
+@testset "Test table properties and five key functions of `RawDataCollection" begin
+    #
+    # iterable
+    # eltype
+    # length
+    # schema
+    # filter
+end
