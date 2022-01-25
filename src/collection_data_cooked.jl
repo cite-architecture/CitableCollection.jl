@@ -64,8 +64,7 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
     RawDataCollection(t, tlabel, rdcprops)    
 end
 
-"""True if for all column names in tables of `tablelist`, there is a corresponding
-property definition in `propertieslist`.
+"""True if all column names in tables of `tablelist` have corresponding entries in `propertieslist`.
 $(SIGNATURES)
 """
 function columnnamesok(rdclist::Vector{RawDataCollection}, propertieslist::Vector{PropertyDefinition})

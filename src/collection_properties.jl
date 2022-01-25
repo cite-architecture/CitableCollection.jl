@@ -178,6 +178,9 @@ function cpropfortype(citeproptype)
     end
 end
 
+"""Determine Julia type corresponding to CEX name for property type.
+$(SIGNATURES)
+"""
 function typeforcprop(cprop::AbstractString)
     dict = Dict(
         "boolean" => Bool,

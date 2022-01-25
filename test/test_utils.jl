@@ -58,6 +58,32 @@ end
 
 
 @testset "Test converting column types in strictly parsed CEX" begin
-    # converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
+    f = joinpath(pwd(), "data", "hmtextract.cex")
+    cexsrc = read(f, String)
+    rdc = fromcex(cexsrc, RawDataCollection, strict = false, delimiter = "#")[2]
+    rawschema = Tables.schema(rdc)
 
+
+    propslist = CitableCollection.propertiesfromcex(cexsrc, "#") 
+    rdcprops = filter(prop -> urncontains(urn(rdc), urn(prop)), propslist)
+    converted = CitableCollection.converttypes(rdc, rdcprops)
+    convertedschema = Tables.schema(converted)
+
+    @test rawschema.names == convertedschema.names
+    @test rawschema.names[2] == :image
+    @test rawschema.types[2] == String
+    @test convertedschema.types[2] == CitableObject.Cite2Urn
+
+
+end
+
+
+@testset "Test comparison of column names in schemata and property lists" begin
+    f = joinpath(pwd(), "data", "hmtextract.cex")
+    cexsrc = read(f, String)
+    rdc = fromcex(cexsrc, RawDataCollection, strict = false, delimiter = "#")[2]
+    propslist = CitableCollection.propertiesfromcex(cexsrc, "#") 
+    rdcprops = filter(prop -> urncontains(urn(rdc), urn(prop)), propslist)
+    @test CitableCollection.columnnamesok([rdc], rdcprops)
+    @test CitableCollection.columnnamesok([rdc], propslist[2:end]) == false
 end

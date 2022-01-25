@@ -17,8 +17,7 @@ include("test_cataloged_collection.jl")
 #=
 Add tests for:
 
-converttypes
-columnnamesok
+
 
 lazyread
 strictread

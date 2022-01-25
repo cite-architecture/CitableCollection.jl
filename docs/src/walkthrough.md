@@ -1,10 +1,18 @@
 # A more detailed walkthrough
 
-
+```@setup walk
+root = pwd() |> dirname |> dirname
+```
 
 ## Reading a cataloged collection
+```@example walk
+f = joinpath(root, "test", "data", "collectionexample.cex")
+cclist = fromcex(f, CatalogedCollection, FileReader)
+```
 
-
+```@example walk
+cc = cclist[1]
+```
 ## Reading a raw data collection
 
 - strict parsing of CEX
@@ -19,7 +27,7 @@
 
 Each column of a table is defined by a `PropertyDefinition`. It is a citable object.
 
-```@example schema
+```@example walk
 using CitableCollection, CitableBase, CitableObject
 idproperty = PropertyDefinition(
     Cite2Urn("urn:cite2:hmt:vaimg.v1.urn:"),
