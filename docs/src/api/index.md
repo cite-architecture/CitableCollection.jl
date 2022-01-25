@@ -2,12 +2,14 @@
 
 ## Exported structures and functions
 
-PropertyDefinition
-RawDataCollection
+
+
 
 ```@docs
+PropertyDefinition
 citetype
 authlist
+RawDataCollection
 ```
 
 
@@ -18,7 +20,6 @@ CitableCollection.lazyread
 CitableCollection.strictread
 CitableCollection.collectionsfromprops
 CitableCollection.propertyids
-CitableCollection.propertynames
 CitableCollection.typeforcprop
 CitableCollection.cpropfortype
 CitableCollection.converttypes
