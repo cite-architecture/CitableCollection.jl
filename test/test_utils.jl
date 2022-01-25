@@ -81,7 +81,7 @@ end
     f = joinpath(pwd(), "data", "hmtextract.cex")
     cexsrc = read(f, String)
     strictly = CitableCollection.strictread(cexsrc, "#")[2]
-    lazily = CitableCollection.lazyread(cexsrc, "#")[1]
+    lazily = CitableCollection.lazyread(cexsrc, "#")[2]
     @test Tables.schema(strictly).names == Tables.schema(lazily).names
     @test Tables.schema(strictly).types != Tables.schema(lazily).typeassert
     @test Tables.schema(lazily).types[2] == String
