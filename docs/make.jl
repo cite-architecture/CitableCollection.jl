@@ -18,6 +18,8 @@ makedocs(
     sitename = "CitableCollection.jl",
     pages = [
         "Overview" => "index.md",
+        "Data structures" => "structs.md",
+        "A more detailed walkthrough" => "walkthrough.md",
 
         "API docs" => "api/index.md"
     ]

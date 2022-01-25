@@ -1,0 +1,60 @@
+// Metadata for the current release
+
+#!cexversion
+3.0.1
+
+#!citelibrary
+// These values are inserted programmtacally when
+// the CITE library is built:
+name#Homer Multitext project, release 2020j
+urn#urn:cite2:hmt:publications.cex.2020j:all
+license#Creative Commons Attribution, Non-Commercial 4.0 License <https://creativecommons.org/licenses/by-nc/4.0/>.
+
+// CITE namespace definitions
+namespace#hmt#http://www.homermultitext.org/citens/hmt
+namespace#greekLit#http://chs.harvard.edu/ctsns/greekLit
+
+// Collection of data models used in this release:
+
+#!citecollections
+URN#Description#Labelling property#Ordering property#License
+urn:cite2:cite:datamodels.v1:#CITE data models#urn:cite2:cite:datamodels.v1.label:##Public domain
+
+#!citeproperties
+Property#Label#Type#Authority list
+urn:cite2:cite:datamodels.v1.urn:#Data model#Cite2Urn#
+urn:cite2:cite:datamodels.v1.label:#Label#String#
+urn:cite2:cite:datamodels.v1.description:#Description#String#
+
+#!citedata
+urn#label#description
+urn:cite2:cite:datamodels.v1:imagemodel#Citable Image#Model of a citable image.  See http://cite-architecture.github.io/imagemodel/.
+urn:cite2:cite:datamodels.v1:binaryimg#Binary image data#Model of a binary image data associated with a citable image.  See TBA.
+urn:cite2:cite:datamodels.v1:tbsmodel#Text Bearing Surface Model#Model of TextBearing Surfaces.  See http://cite-architecture.github.io/tbsmodel/.
+urn:cite2:cite:datamodels.v1:dsemodel#Diplomatic Scholarly Edition#Diplomatic Scholarly Edition.  See https://cite-architecture.github.io/dsemodel/.
+urn:cite2:cite:datamodels.v1:commentarymodel#Commentary#Model text passages commenting on text passages
+
+
+#!datamodels
+Collection#Model#Label#Descriptio
+urn:cite2:hmt:e3pages.v1:#urn:cite2:cite:datamodels.v1:tbsmodel#Model of Escorial Y 1.1 codex#Escorial Monastery, codex Y 1.1, in the CITE model of a sequence of text-bearing surfaces
+
+#!citecollections
+URN#Description#Labelling property#Ordering property#License
+urn:cite2:hmt:e3pages.v1:#Escorial Y 1.1 manuscript#urn:cite2:hmt:e3pages.v1.label:#urn:cite2:hmt:e3pages.v1.sequence:#CC-attribution-share-alike
+
+#!citeproperties
+Property#Label#Type#Authority list
+urn:cite2:hmt:e3pages.v1.sequence:#Page sequence#Number#
+urn:cite2:hmt:e3pages.v1.image:#TBS image#Cite2Urn#
+urn:cite2:hmt:e3pages.v1.urn:#URN#Cite2Urn#
+urn:cite2:hmt:e3pages.v1.rv:#Recto or Verso#String#recto,verso
+urn:cite2:hmt:e3pages.v1.label:#Label#String#
+
+#!citedata
+sequence#image#urn#rv#label
+1#urn:cite2:hmt:e3bifolio.v1:E3_1v_2r#urn:cite2:hmt:e3pages.v1:1v#verso#Escorial Y 1.1, folio 1 verso
+2#urn:cite2:hmt:e3bifolio.v1:E3_1v_2r#urn:cite2:hmt:e3pages.v1:2r#recto#Escorial Y 1.1, folio 2 recto
+3#urn:cite2:hmt:e3bifolio.v1:E3_2v_3r#urn:cite2:hmt:e3pages.v1:2v#verso#Escorial Y 1.1, folio 2 verso
+4#urn:cite2:hmt:e3bifolio.v1:E3_2v_3r#urn:cite2:hmt:e3pages.v1:3r#recto#Escorial Y 1.1, folio 3 recto
+5#urn:cite2:hmt:e3bifolio.v1:E3_3v_4r#urn:cite2:hmt:e3pages.v1:3v#verso#Escorial Y 1.1, folio 3 verso

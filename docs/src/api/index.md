@@ -1,27 +1,26 @@
 # API documentation
 
-## Exported structures
+## Exported structures and functions
+
+
+
 
 ```@docs
-CatalogedCollection
-PropertyConfiguration
+PropertyDefinition
+citetype
+authlist
+RawDataCollection
 ```
 
-## Exported functions
-
-```@docs
-catalogdf
-collectiondfs
-```
 
 ## Internal functions
 
 ```@docs
-CitableCollection.blocksagree
-CitableCollection.catalogdata
-CitableCollection.collectionurns
-CitableCollection.propertydata
-CitableCollection.propertyurns
-CitableCollection.propertyconfigs
-CitableCollection.configured_propertynames
+CitableCollection.lazyread
+CitableCollection.strictread
+CitableCollection.collectionsfromprops
+CitableCollection.propertyids
+CitableCollection.typeforcprop
+CitableCollection.cpropfortype
+CitableCollection.converttypes
 ```
