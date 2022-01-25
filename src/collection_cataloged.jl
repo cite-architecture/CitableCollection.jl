@@ -162,3 +162,72 @@ function fromcex(trait::CatalogedCollectionCex, cexsrc::AbstractString, T;
     results
 
 end
+
+
+
+"""Implement `istable` for `CatalogedCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
+function istable(cc::CatalogedCollection)
+    true
+end
+
+"""Implement `columns` for `CatalogedCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
+function columns(cc::CatalogedCollection)
+    columns(cc.data)
+end
+
+"""Implement `rows` for `CatalogedCollection`.
+$(SIGNATURES)
+Required for citable collection trait.
+"""
+function rows(cc::CatalogedCollection)
+    rows(cc.data)
+end
+
+
+"""Implement `schema` for `CatalogedCollection`.
+$(SIGNATURES)
+"""
+function schema(cc::CatalogedCollection)
+    schema(cc.data)
+end
+
+"""Implement `length` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function length(cc::CatalogedCollection)
+    length(cc.data)
+end
+
+"""Implement `eltype` for `RawDataCollection`.
+$(SIGNATURES)
+"""
+function eltype(cc::CatalogedCollection)
+    eltype(cc.data)
+end
+
+"""Define initial iteration of a `RawDataCollection`.
+#(SIGNATURES)
+"""
+function iterate(cc::CatalogedCollection)
+    isempty(cc.data) ? nothing : (cc.data.data[1], 2)
+end
+
+"""Define iteration with state of a `RawDataCollection`.
+#(SIGNATURES)
+"""
+function iterate(cc::CatalogedCollection, state)
+    state > length(cc.data) ? nothing : (cc.data.data[state], state + 1)
+end
+
+"""Implement filtering for `RawDataCollection`
+$(SIGNATURES)
+"""
+function filter(f, cc::CatalogedCollection)
+     Iterators.filter(f, cc.data) |> collect
+end
