@@ -1,6 +1,4 @@
-"""Metadata for a collection of citable objects.
-$(SIGNATURES)
-"""
+"""Metadata for a collection of citable objects."""
 struct CiteCatalogEntry <: Citable
     urn::Cite2Urn
     label::AbstractString
@@ -9,12 +7,21 @@ struct CiteCatalogEntry <: Citable
     license::AbstractString
 end
 
+"""Override `Base.show` for a `CiteCatalogEntry`.
+$(SIGNATURES)
+"""
 function show(io::IO, doc::CiteCatalogEntry)
     print(io, doc.label)
 end
 
-struct CitableCatEntry <: CitableTrait end
 
+"""Define singleton type of `CitableTrait` value.
+$(SIGNATURES)
+"""
+struct CitableCatEntry <: CitableTrait end
+"""Set value of `CitableTrait` for `CiteCatalogEntry`.
+$(SIGNATURES)
+"""
 function citabletrait(::Type{CiteCatalogEntry})
     CitableCatEntry()
 end
