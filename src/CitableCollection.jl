@@ -46,6 +46,7 @@ export citetype, authlist
 export RawDataCollection
 
 export CiteCatalogEntry
+export isordered
 export CiteCollectionCatalog
 export CatalogedCollection
 

@@ -15,6 +15,14 @@ function show(io::IO, doc::CiteCatalogEntry)
 end
 
 
+"""True if a value is defined for `ordering_property`.
+$(SIGNATURES)
+"""
+function isordered(catentry::CiteCatalogEntry)
+    ! isnothing(catentry.ordering_property)
+end
+
+
 """Define singleton type of `CitableTrait` value.
 $(SIGNATURES)
 """
@@ -26,17 +34,25 @@ function citabletrait(::Type{CiteCatalogEntry})
     CitableCatEntry()
 end
 
-
+"""Define URN type of `CiteCatalogEntry`.
+$(SIGNATURES)
+"""
 function urntype(doc::CiteCatalogEntry)
-    Isbn10Urn
+    Cite2Urn
 end
 
-function urn(doc::CiteCatalogEntry)
-    doc.urn
+"""Find identifying URN for `collection`.
+$(SIGNATURES)
+"""
+function urn(collection::CiteCatalogEntry)
+    collection.urn
 end
 
-function label(doc::CiteCatalogEntry)
-    string(doc)
+"""Find readable label for `collection`.
+$(SIGNATURES)
+"""
+function label(collection::CiteCatalogEntry)
+    collection.label
 end
 
 
@@ -61,6 +77,10 @@ function cextrait(::Type{CiteCatalogEntry})
     CatEntryCex()
 end
 
+
+"""Serialize a `CiteCatalogEntry` to delimited-text format.
+$(SIGNATURES)
+"""
 function cex(doc::CiteCatalogEntry; delimiter = "|")
     columns = [doc.urn, doc.label, doc.labelling_property]
     isnothing(ordering_property) ? push!(columns, "") : push!(columns, doc.ordering_property)
@@ -68,6 +88,11 @@ function cex(doc::CiteCatalogEntry; delimiter = "|")
     join(columns, delimiter)
 end
 
+
+
+"""Instantiate a `CiteCatalogEntry` from CEX source.
+$(SIGNATURES)
+"""
 function fromcex(traitvalue::CatEntryCex, cexsrc::AbstractString, T;
     delimiter = "|", configuration = nothing, strict = true)
     fields = split(cexsrc, delimiter)

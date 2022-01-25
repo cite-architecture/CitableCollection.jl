@@ -1,18 +1,19 @@
 
 
-@testset "Test structure of a `CiteCatalogEntry`" begin
-    urn = Cite2Urn("urn:cite2:hmt:e3pages.v1:")
-    label = "Pages of the Escorial Y 1.1 manuscript"
+@testset "Test structure and citable trait of a `CiteCatalogEntry`" begin
+    collurn = Cite2Urn("urn:cite2:hmt:e3pages.v1:")
+    colllabel = "Pages of the Escorial Y 1.1 manuscript"
     labelurn = Cite2Urn("urn:cite2:hmt:e3pages.v1.label:")
-    sequenceurn = Cite2URN("urn:cite2:hmt:e3pages.v1.sequence:") 
+    sequenceurn = Cite2Urn("urn:cite2:hmt:e3pages.v1.sequence:") 
     license = "CC-attribution-share-alike"
-    catentry = CiteCatalogEntry(urn, label, labelurn, sequence8rn, license)
-
+    catentry = CiteCatalogEntry(collurn, colllabel, labelurn, sequenceurn, license)
+    @test isordered(catentry)
+    @test citable(catentry)
+    @test urn(catentry) == Cite2Urn("urn:cite2:hmt:e3pages.v1:")
+    @test urntype(catentry) == Cite2Urn
+    @test label(catentry) == "Pages of the Escorial Y 1.1 manuscript"
 end
 
-@testset "Test citable trait of a `CiteCatalogEntry" begin
-    #
-end
 
 
 @testset "Test URN comparison trait of a `CiteCatalogEntry" begin
@@ -20,5 +21,8 @@ end
 end
 
 @testset "Test CEX trait of a `CiteCatalogEntry" begin
-    #
+    cexstr = "urn:cite2:hmt:e3pages.v1:#Escorial Y 1.1 manuscript#urn:cite2:hmt:e3pages.v1.label:#urn:cite2:hmt:e3pages.v1.sequence:#CC-attribution-share-alike"
+    catentry = fromcex(cexstr, CiteCatalogEntry, delimiter = "#")
+    @test catentry isa CiteCatalogEntry
+    @test cex(catentry, delimiter = "#") == cexstr
 end
