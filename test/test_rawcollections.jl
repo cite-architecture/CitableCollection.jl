@@ -42,5 +42,11 @@ end
     @test isempty(urnequals(collurn, rdc))
     @test length(urncontains(collurn, rdc)) == 5
     @test length(urnsimilar(collurn, rdc)) == 5
+end
+
+@testset "Test case-insensitive labelling of column names in reading from CEX for `RawDataCollection" begin
+    f = joinpath(pwd(), "data", "hmt-authlists", "astronomy.cex") 
+    rdc = fromcex(f, RawDataCollection, FileReader)
+    @test rdc isa Vector{RawDataCollection}
 
 end

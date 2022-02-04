@@ -9,7 +9,7 @@ function strictread(cexsrc::AbstractString, delimiter = "|")
     propslist = propertiesfromcex(cexsrc, delimiter)
     colnamescheck = columnnamesok(rdclist, propslist)
     if colnamescheck == false
-        DomainError(cexsrc, "Invalid configuration of CITE collection.")
+        DomainError(propslist, "Invalid configuration of CITE collection.")
     else
         converted = RawDataCollection[]
         # Now convert types as needed.
@@ -28,30 +28,50 @@ $(SIGNATURES)
 """
 function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
     sch = Tables.schema(rdc.data)
+    @debug("Converting raw wiht sch ", sch)
     coldata = []
     colidx = 0
-    for rdcprop in rdcprops
+    for rdcprop in rdcprops   
         colidx = colidx + 1
         @debug("==>At index $(colidx), property $(rdcprop)")
         @debug("==>Schema: $(sch.types[colidx]) for $(sch.names[colidx])")
         colname = sch.names[colidx]
         coltype = rdcprop.property_type
         @debug("==>CITE type: $(sch.names[colidx]) $(coltype) $(propertyid(rdcprop.property_urn))")
-        if coltype == Cite2Urn 
+        if coltype == Cite2Urn && ! (sch.types[colidx] <: AbstractString)
             @debug("SEE if  already converted: $(sch.types[colidx]) for $(sch.names[colidx])")
-            if sch.types[colidx] == Cite2Urn
+            if sch.types[colidx] == Cite2Urn 
                 @debug("ALREADY CONVERTED")
                 row = map(getproperty(colname), rdc.data)
                 push!(coldata, row)
             else
-                @debug("NOT yet converted. Pusing Cite2Urns to coldata.")
-                urnrow = map(row -> Cite2Urn(row[colname]), rdc.data)
+                @debug("NOT yet converted. Creating Cite2Urns on column/type", colname, sch.types[colidx])
+
+
+                #map(row -> Cite2Urn(row[colname]), rdc.data)
+                urnrow = []
+                for r in rdc.data
+                    if ismissing(r[colname])
+                        push!(urnrow, missing)
+                    else
+                        push!(urnrow, Cite2Urn(strip(r[colname])))
+                    end
+                end
                 push!(coldata, urnrow)
             end
          
             
-        elseif coltype == CtsUrn
-            urnrow = map(row -> CtsUrn(row[colname]), rdc.data)
+        elseif coltype == CtsUrn && ! (sch.types[colidx] <: AbstractString)
+            #urnrow = map(row -> CtsUrn(row[colname]), rdc.data)
+            #map(row -> Cite2Urn(row[colname]), rdc.data)
+            urnrow = []
+            for r in rdc.data
+                if ismissing(r[colname])
+                    push!(urnrow, missing)
+                else
+                    push!(urnrow, CtsUrn(strip(r[colname])))
+                end
+            end
             push!(coldata, urnrow)
         else
             @debug("REUSE column as is.")
@@ -64,16 +84,17 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
     RawDataCollection(t, tlabel, rdcprops)    
 end
 
-"""True if all column names in tables of `tablelist` have corresponding entries in `propertieslist`.
+"""True if all column names in tables of `tablelist` have corresponding entries in `propertieslist`.  Comparison of column names and property  names is case-insensitive.
 $(SIGNATURES)
 """
 function columnnamesok(rdclist::Vector{RawDataCollection}, propertieslist::Vector{PropertyDefinition})
     for rdc in rdclist
-        set1 = CitableCollection.propertyids(propertieslist, urn(rdc))  |> Set 
-        set2 = Tables.columnnames(rdc.data) .|> string  |> Set
+        @debug("Raw propertyids:", CitableCollection.propertyids(propertieslist, urn(rdc)))
+        set1 = CitableCollection.propertyids(propertieslist, urn(rdc)) .|> lowercase |> Set 
+        set2 = Tables.columnnames(rdc.data) .|> string .|> lowercase |> Set
         @debug(">Compare ", set1, set2)
         if set1 != set2
-            @warn("Column names in table did not match configured values for collection $(urn(rdc)): $(set1) != $(set2)")
+            @warn("Column names in table did not match configured values for collection $(urn(rdc)): table/configuration:",set1, set2)
             return false
         end
     end
@@ -103,7 +124,8 @@ $(SIGNATURES)
 function propertiesfromcex(cexsrc::AbstractString, delimiter = "|")
     proplist = PropertyDefinition[]
     for line in data(cexsrc, "citeproperties")
-        push!(proplist, fromcex(line, PropertyDefinition, delimiter = delimiter))
+        @debug("PROP FROM", line)
+        push!(proplist, fromcex(lowercase(line), PropertyDefinition, delimiter = delimiter))
     end
     proplist
 end
