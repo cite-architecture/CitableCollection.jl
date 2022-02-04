@@ -219,7 +219,9 @@ function lazyread(cexsrc::AbstractString, delimiter = "|")
     datablocks = blocks(cexsrc, "citedata")
     datacollections = Table[]
     for blk in datablocks
-        c = CSV.File(IOBuffer(join(blk.lines, "\n")), delim = delimiter)
+        colnames = split(blk.lines[1] |> lowercase , delimiter) .|> Symbol
+
+        c = CSV.File(IOBuffer(join(blk.lines, "\n")), delim = delimiter, skipto = 2, header = colnames)
         cdata = citetable(Table(c))
         push!(datacollections, cdata)
     end
