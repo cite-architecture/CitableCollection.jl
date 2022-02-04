@@ -28,7 +28,7 @@ $(SIGNATURES)
 """
 function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
     sch = Tables.schema(rdc.data)
-    @warn("Converting raw wiht sch ", sch)
+    @debug("Converting raw wiht sch ", sch)
     coldata = []
     colidx = 0
     for rdcprop in rdcprops   
@@ -37,7 +37,7 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
         @debug("==>Schema: $(sch.types[colidx]) for $(sch.names[colidx])")
         colname = sch.names[colidx]
         coltype = rdcprop.property_type
-        @warn("==>CITE type: $(sch.names[colidx]) $(coltype) $(propertyid(rdcprop.property_urn))")
+        @debug("==>CITE type: $(sch.names[colidx]) $(coltype) $(propertyid(rdcprop.property_urn))")
         if coltype == Cite2Urn && ! (sch.types[colidx] <: AbstractString)
             @debug("SEE if  already converted: $(sch.types[colidx]) for $(sch.names[colidx])")
             if sch.types[colidx] == Cite2Urn 
@@ -45,7 +45,7 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
                 row = map(getproperty(colname), rdc.data)
                 push!(coldata, row)
             else
-                @warn("NOT yet converted. Creating Cite2Urns on column/type", colname, sch.types[colidx])
+                @debug("NOT yet converted. Creating Cite2Urns on column/type", colname, sch.types[colidx])
 
 
                 #map(row -> Cite2Urn(row[colname]), rdc.data)
@@ -89,6 +89,7 @@ $(SIGNATURES)
 """
 function columnnamesok(rdclist::Vector{RawDataCollection}, propertieslist::Vector{PropertyDefinition})
     for rdc in rdclist
+        @debug("Raw propertyids:", CitableCollection.propertyids(propertieslist, urn(rdc)))
         set1 = CitableCollection.propertyids(propertieslist, urn(rdc)) .|> lowercase |> Set 
         set2 = Tables.columnnames(rdc.data) .|> string .|> lowercase |> Set
         @debug(">Compare ", set1, set2)
@@ -123,7 +124,8 @@ $(SIGNATURES)
 function propertiesfromcex(cexsrc::AbstractString, delimiter = "|")
     proplist = PropertyDefinition[]
     for line in data(cexsrc, "citeproperties")
-        push!(proplist, fromcex(line, PropertyDefinition, delimiter = delimiter))
+        @debug("PROP FROM", line)
+        push!(proplist, fromcex(lowercase(line), PropertyDefinition, delimiter = delimiter))
     end
     proplist
 end

@@ -1,17 +1,3 @@
-
-#!citecollections
-urn|Description|Labelling property|Ordering property|License
-urn:cite2:hmt:astro.2017a:|Astronomical entities|urn:cite2:hmt:astro.2017a:Label||CC-attribution-share-alike
-
-#!citeproperties
-urn|Label|Type|Authority list
-// Named entities: astronomical entities
-urn:cite2:hmt:astro.2017a.urn:|URN|Cite2Urn|
-urn:cite2:hmt:astro.2017a.label:|Label|String|
-urn:cite2:hmt:astro.2017a.description:|Description|String|
-urn:cite2:hmt:astro.2017a.status:|Status|String|proposed,approved,rejected
-urn:cite2:hmt:astro.2017a.redirect:|Redirect|Cite2Urn|
-
 #!citedata
 urn|Label|Description|Status|Redirect
 urn:cite2:hmt:astro:astro1|Orion|constellation located on the celestial equator,named for a famed hunter in Greek myth|proposed|
