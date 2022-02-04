@@ -154,7 +154,7 @@ function fromcex(trait::CatalogedCollectionCex, cexsrc::AbstractString, T;
         if length(entries) > 1
             throw(DomainError(urn(c)), "Multiple catalog entries for collection $(urn(c))")
         elseif isempty(entries)
-            throw(DomainError(urn(c)), "No catalog entry for collection $(urn(c))")
+            throw(DomainError(urn(c), "No catalog entry for collection $(urn(c))"))
         end
         push!(results, CatalogedCollection(entries[1], c))
     end
