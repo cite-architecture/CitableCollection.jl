@@ -27,25 +27,26 @@ end
 $(SIGNATURES)
 """
 function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinition})
-    sch = Tables.schema(rdc.data)
-    @debug("Converting raw wiht sch ", sch)
+    rawschema = Tables.schema(rdc.data)
+    @warn("Converting raw wiht sch ", rawschema)
     coldata = []
     colidx = 0
     for rdcprop in rdcprops   
         colidx = colidx + 1
-        @debug("==>At index $(colidx), property $(rdcprop)")
-        @debug("==>Schema: $(sch.types[colidx]) for $(sch.names[colidx])")
-        colname = sch.names[colidx]
+        @warn("==>At index $(colidx), property $(rdcprop)")
+        @warn("==>Schema: $(rawschema.types[colidx]) for $(rawschema.names[colidx])")
+        colname = rawschema.names[colidx]
         coltype = rdcprop.property_type
-        @debug("==>CITE type: $(sch.names[colidx]) $(coltype) $(propertyid(rdcprop.property_urn))")
-        if coltype == Cite2Urn && ! (sch.types[colidx] <: AbstractString)
-            @debug("SEE if  already converted: $(sch.types[colidx]) for $(sch.names[colidx])")
-            if sch.types[colidx] == Cite2Urn 
-                @debug("ALREADY CONVERTED")
+        @warn("==>CITE type: $(rawschema.names[colidx]) $(coltype) $(propertyid(rdcprop.property_urn))")
+        @warn("Checki if rawschema subtypes AbstractString/new type is Cite2Urn", (rawschema.types[colidx] <: AbstractString), (coltype == Cite2Urn))
+        if coltype == Cite2Urn && ! (rawschema.types[colidx] <: AbstractString)
+            @warn("SEE if  already converted: $(rawschema.types[colidx]) for $(rawschema.names[colidx])")
+            if rawschema.types[colidx] == Cite2Urn 
+                @warn("ALREADY CONVERTED")
                 row = map(getproperty(colname), rdc.data)
                 push!(coldata, row)
             else
-                @debug("NOT yet converted. Creating Cite2Urns on column/type", colname, sch.types[colidx])
+                @warn("NOT yet converted. Creating Cite2Urns on column/type", colname, rawschema.types[colidx])
 
 
                 #map(row -> Cite2Urn(row[colname]), rdc.data)
@@ -61,7 +62,7 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
             end
          
             
-        elseif coltype == CtsUrn && ! (sch.types[colidx] <: AbstractString)
+        elseif coltype == CtsUrn && ! (rawschema.types[colidx] <: AbstractString)
             #urnrow = map(row -> CtsUrn(row[colname]), rdc.data)
             #map(row -> Cite2Urn(row[colname]), rdc.data)
             urnrow = []
@@ -79,7 +80,7 @@ function converttypes(rdc::RawDataCollection, rdcprops::Vector{PropertyDefinitio
             push!(coldata, row)
         end
     end
-    t = NamedTuple{sch.names}(coldata) |> Table
+    t = NamedTuple{rawschema.names}(coldata) |> Table
     tlabel = "Citable collection of $(length(t)) items with schema specified from `citeproperties` settings."    
     RawDataCollection(t, tlabel, rdcprops)    
 end
