@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 2b3266fd-4d8d-4531-a4e3-c811293d03a1
+      url: 'https://neelsmith.quarto.pub/citablecollection'
