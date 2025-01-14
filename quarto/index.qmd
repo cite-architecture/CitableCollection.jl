@@ -1,8 +1,27 @@
 ---
 title: "Citable collections"
+engine: julia
 ---
 
-Concepts and implementation in a Julia interface.
+
+## Overview
+
+Collections of citable objects are generic tabular data structures with a schema.  They  meet two specific requirements of the CITE architecture:
+
+1. they can be filtered using URN logic
+2. they support serialization to and instantiation from delimited text following the CEX format
+
+## Briefest possible example
+
+
+
+Read a brief CEX sample with data in two cataloged collections from a sample data file in this repository's `test/data` directory.
+
+```{julia}
+using CitableBase, CitableCollection
+url = "https://raw.githubusercontent.com/cite-architecture/CitableCollection.jl/refs/heads/main/test/data/hmtextract.cex"
+catalogedcollections = fromcex(url, CatalogedCollection, UrlReader, delimiter = "#")
+```
 
 
 | | Learning the package | Using the package |
